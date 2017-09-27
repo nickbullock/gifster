@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "gifster",
+  "version": "1.0",
+  "description": "extension to make .gif animations",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "*://*/*" ],
+      "js": [ "content.js" ]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [],
+
+  "browser_action": {
+    "default_title": "gifster",
+    "default_icon": "icon48.png",
+    "default_popup": "popup.html"
+  }
+
+}

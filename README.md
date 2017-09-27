@@ -1,2 +1,2 @@
 # gifster
-chrome extension to make .gif
+Chrome extension to create .gif animations from your screen and webcam
