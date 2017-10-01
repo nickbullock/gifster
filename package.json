@@ -23,16 +23,15 @@
   "homepage": "https://github.com/nickbullock/gifster#readme",
   "dependencies": {
     "materialize-css": "0.100.2",
-    "msr": "1.3.4",
-    "recordrtc": "^5.4.3"
+    "recordrtc": "^5.4.4"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.0",
-    "babel-preset-es2015": "^6.24.1",
-    "copy-webpack-plugin": "^4.1.0",
+    "babel-preset-es2015": "6.24.1",
+    "copy-webpack-plugin": "4.1.0",
     "css-loader": "0.28.7",
     "file-loader": "0.11.2",
     "html-webpack-plugin": "2.30.1",

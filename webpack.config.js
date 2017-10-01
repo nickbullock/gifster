@@ -5,7 +5,7 @@ const popupHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "popup.html",
     filename: "popup.html",
-    chunks: ["background"]
+    chunks: ["popup"]
 };
 const optionsHtmlWebpackPluginOptions = {
     title: "gifster",
@@ -23,6 +23,7 @@ const gifRecorderCopyWebpackPluginOptions = [{from: "scripts/gif-recorder.js", t
 
 module.exports = {
     entry: {
+        popup: "./scripts/popup.js",
         content: "./scripts/content.js",
         background: "./scripts/background.js",
         options: "./scripts/options.js",

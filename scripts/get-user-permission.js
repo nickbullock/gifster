@@ -22,6 +22,7 @@ $(function() {
                 mediaOptions,
                 stream => {
                     chrome.storage.sync.set({'isPermissionGranted': true});
+                    stream.getVideoTracks()[0].stop();
                     console.log("All privileges granted now")
                 },
                 e => console.error(e)

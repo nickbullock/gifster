@@ -1,87 +1,82 @@
-import "../manifest.json";
-import "../static/icon16.png";
-import "../static/icon48.png";
-import "../static/icon128.png";
-import $ from "jQuery";
-import "materialize-css/dist/js/materialize.js";
-import "materialize-css/dist/css/materialize.css";
 import RecordRTC from "recordrtc";
+
+let rrtc;
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-$(function() {
-    const SCREEN = ".screen";
-    const WEBCAM = ".webcam";
-    const STOP = ".stop";
-    const OPTIONS = ".options";
-    let rrtc;
+function init() {
+    chrome.runtime.onMessage.addListener(contentMessageListener);
+}
 
-    function init () {
-        registerButtonCallbackList();
-    }
-
-    function registerButtonCallbackList () {
-        $(SCREEN).click(screenHandler);
-        $(WEBCAM).click(webcamHandler);
-        $(STOP).click(recordStopper);
-        $(OPTIONS).click(openOptionsPage)
-    }
-
-    function screenHandler() {
-        const mediaOptions = {
-            video: true
-        };
-        
-        function screenHandlerSuccess(stream) {
-
-            const options = {
-                type: "gif"
-            };
-
-            rrtc = RecordRTC(stream, options);
-            rrtc.startRecording();
+function screenHandler() {
+    const mediaOptions = {
+        video: true,
+        videoConstraints: {
+            mandatory: {
+                chromeMediaSource: 'tab'
+            }
         }
+    };
 
-        navigator.getUserMedia(mediaOptions, screenHandlerSuccess, defaultErrorHandler);
-    }
-
-    function webcamHandler() {
-        const mediaOptions = {
-            video: true
+    function screenHandlerSuccess(stream) {
+        const options = {
+            type: "gif",
+            showMousePointer: true,
         };
 
-        function webcamHandlerSuccess(stream) {
-
-            const options = {
-                type: "gif"
-            };
-
-            rrtc = RecordRTC(stream, options);
-            rrtc.startRecording();
-        }
-
-        navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
+        rrtc = RecordRTC(stream, options);
+        rrtc.setRecordingDuration(3000, recordSaveHandler);
+        rrtc.startRecording();
     }
 
-    function recordStopper() {
-        rrtc.stopRecording((data) => console.log(data))
-        rrtc.save();
+    chrome.tabCapture.capture(mediaOptions, screenHandlerSuccess);
+}
+
+function webcamHandler() {
+    const mediaOptions = {
+        video: true
+    };
+
+    function webcamHandlerSuccess(stream) {
+
+        const options = {
+            type: "gif"
+        };
+
+        rrtc = RecordRTC(stream, options);
+        rrtc.setRecordingDuration(3000, recordSaveHandler);
+        rrtc.startRecording();
     }
 
-    function openOptionsPage() {
-        if (chrome.runtime.openOptionsPage) {
-            chrome.runtime.openOptionsPage();
-        } else {
-            window.open(chrome.runtime.getURL('options.html'));
-        }
-    }
+    navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
+}
 
-    function defaultErrorHandler(e) {
-        console.log(e);
-    }
+function recordSaveHandler() {
+    rrtc.save();
+}
 
-    init();
-});
+function defaultErrorHandler(e) {
+    console.log(e);
+}
+
+function contentMessageListener(request, sender, sendResponse) {
+    console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension", request);
+
+    if (request.init) {
+        console.log("content script initialized");
+    }
+    if (request.webcam) {
+        webcamHandler();
+        sendResponse({data: "webcam from runtime message started"});
+    }
+    if (request.screen) {
+        screenHandler();
+        sendResponse({data: "screen from runtime message started"});
+    }
+}
+
+init();
+
 
 
 

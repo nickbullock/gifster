@@ -10,13 +10,15 @@
   },
   "content_scripts": [
     {
-      "matches": [ "*://*/*" ],
-      "js": [ "content.js" ]
+      "matches": [
+        "*://*/*"
+      ],
+      "js": ["content.js"]
     }
   ],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "scripts": ["gif-recorder.js","background.js"],
+    "persistent": true
   },
   "options_page": "options.html",
   "browser_action": {
@@ -25,7 +27,11 @@
     "default_popup": "popup.html"
   },
   "permissions": [
+    "*://*/*",
+    "activeTab",
+    "tabCapture",
     "tabs",
-    "storage"
+    "storage",
+    "background"
   ]
 }
