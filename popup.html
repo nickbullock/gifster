@@ -6,10 +6,22 @@
 </head>
 <body>
 <div style="width:270px">
-    <div>
-        <a class="btn waves-effect waves-green btn-flat col s12">Record .gif from webcam</a>
-        <a class="btn waves-effect waves-green btn-flat col s12">Record .gif from screen</a>
+    <div class="collection">
+        <a class="collection-item waves-effect waves-light screen">
+            <span class="blue-text text-darken-2">Record .gif from the screen</span>
+        </a>
+        <a class="collection-item waves-effect waves-light webcam">
+            <span class="blue-text text-darken-2">Record .gif from webcam</span>
+        </a>
+        <a class="collection-item waves-effect waves-red stop">
+            <span class="blue-text text-darken-2">Stop</span>
+        </a>
+        <a class="collection-item waves-effect waves-light options">
+            <span class="blue-text text-darken-2">Options</span>
+        </a>
     </div>
 </div>
+<iframe src="get-user-permission.html" style="display:none"></iframe>
+<script src="gif-recorder.js"></script>
 </body>
 </html>

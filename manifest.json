@@ -15,14 +15,17 @@
     }
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "persistent": false
   },
-  "permissions": [],
-
+  "options_page": "options.html",
   "browser_action": {
     "default_title": "gifster",
     "default_icon": "icon48.png",
     "default_popup": "popup.html"
-  }
-
+  },
+  "permissions": [
+    "tabs",
+    "storage"
+  ]
 }
