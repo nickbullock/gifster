@@ -1,6 +1,7 @@
-import RecordRTC from "recordrtc";
+import RecordRTC from "./RecordRTC";
 
 let rrtc;
+let activeStream;
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -19,13 +20,14 @@ function screenHandler() {
     };
 
     function screenHandlerSuccess(stream) {
+        activeStream = stream;
         const options = {
             type: "gif",
             showMousePointer: true,
         };
 
         rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(3000, recordSaveHandler);
+        rrtc.setRecordingDuration(10000, recordSaveHandler);
         rrtc.startRecording();
     }
 
@@ -38,6 +40,7 @@ function webcamHandler() {
     };
 
     function webcamHandlerSuccess(stream) {
+        activeStream = stream;
 
         const options = {
             type: "gif"
@@ -52,6 +55,8 @@ function webcamHandler() {
 }
 
 function recordSaveHandler() {
+    activeStream.getVideoTracks().forEach(track => track.stop());
+
     rrtc.save();
 }
 
