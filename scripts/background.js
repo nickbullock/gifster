@@ -68,8 +68,8 @@ function defaultErrorHandler(e) {
             chrome.notifications.create({
                 type: "basic",
                 iconUrl: chrome.extension.getURL("icon128.png"),
-                title: "Устройство не обнаружено",
-                message: "gifster не смог найти запрашиваемое устройство"
+                title: "Device not found",
+                message: "gifster didn't find requested device"
             });
             break;
         default:
