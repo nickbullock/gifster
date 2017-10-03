@@ -1,4 +1,4 @@
-import RecordRTC from "./RecordRTC";
+import RecordRTC from "./record-rtc";
 
 let rrtc;
 let activeStream;
