@@ -28,8 +28,10 @@ function screenHandler() {
         };
 
         rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(10000, recordSaveHandler);
+        rrtc.setRecordingDuration(30000, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
         rrtc.startRecording();
+
+        createRecordingProgressNotification(30000);
     }
 
     chrome.tabCapture.capture(mediaOptions, screenHandlerSuccess);
@@ -48,17 +50,21 @@ function webcamHandler() {
         };
 
         rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(3000, recordSaveHandler);
+        rrtc.setRecordingDuration(30000, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
         rrtc.startRecording();
+
+        createRecordingProgressNotification(30000);
     }
 
     navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
 }
 
 function recordSaveHandler() {
+    const filename = this.filename;
+
     activeStream.getVideoTracks().forEach(track => track.stop());
     activeStream = null;
-    rrtc.save();
+    rrtc.save(filename);
 }
 
 function defaultErrorHandler(e) {
@@ -109,6 +115,41 @@ function commandListener(command) {
         default:
             break;
     }
+}
+
+function createRecordingProgressNotification(timeout){
+    if(!timeout){
+        console.error("[createRecordingProgressNotification] timeout is not provided");
+        return;
+    }
+
+    chrome.notifications.create(
+        {
+            type: "progress",
+            iconUrl: chrome.extension.getURL("icon128.png"),
+            title: "Recording!",
+            message: "gifster started recording",
+            progress: 0
+        },
+        (id) => {
+            let progress = 0;
+
+            const interval = setInterval(function() {
+                progress += 10;
+                if (progress <= 100) {
+                    chrome.notifications.update(id, {progress: progress}, function (updated) {
+                        if (!updated) {
+                            // the notification was closed
+                            clearInterval(interval);
+                        }
+                    });
+                } else {
+                    chrome.notifications.clear(id);
+                    clearInterval(interval);
+                }
+            }, (timeout/10))
+        }
+    );
 }
 
 init();
