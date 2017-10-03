@@ -1,1 +1,1 @@
-chrome.runtime.sendMessage({init: true});
+chrome.runtime.sendMessage({contentInit: true});

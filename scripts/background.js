@@ -80,8 +80,11 @@ function defaultErrorHandler(e) {
 function messageListener(request, sender, sendResponse) {
     console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension", request);
 
-    if (request.init) {
-        console.log("content script initialized");
+    if (request.contentInit) {
+        console.log("content controller initialized");
+    }
+    if (request.optionsInit) {
+        console.log("options controller initialized");
     }
     if (request.webcam) {
         webcamHandler();
@@ -104,7 +107,6 @@ function commandListener(command) {
             screenHandler();
             break;
         default:
-            console.log("[commandListener]: unexpected command", command);
             break;
     }
 }
