@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/nickbullock/gifster#readme",
   "dependencies": {
-    "materialize-css": "0.100.2",
     "recordrtc": "^5.4.4"
   },
   "devDependencies": {

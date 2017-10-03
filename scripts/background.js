@@ -6,7 +6,8 @@ let activeStream;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 function init() {
-    chrome.runtime.onMessage.addListener(contentMessageListener);
+    chrome.runtime.onMessage.addListener(messageListener);
+    chrome.commands.onCommand.addListener(commandListener);
 }
 
 function screenHandler() {
@@ -56,15 +57,27 @@ function webcamHandler() {
 
 function recordSaveHandler() {
     activeStream.getVideoTracks().forEach(track => track.stop());
-
+    activeStream = null;
     rrtc.save();
 }
 
 function defaultErrorHandler(e) {
-    console.log(e);
+    console.error(e);
+    switch (e.name){
+        case "DevicesNotFoundError":
+            chrome.notifications.create({
+                type: "basic",
+                iconUrl: chrome.extension.getURL("icon128.png"),
+                title: "Устройство не обнаружено",
+                message: "gifster не смог найти запрашиваемое устройство"
+            });
+            break;
+        default:
+            break;
+    }
 }
 
-function contentMessageListener(request, sender, sendResponse) {
+function messageListener(request, sender, sendResponse) {
     console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension", request);
 
     if (request.init) {
@@ -77,6 +90,22 @@ function contentMessageListener(request, sender, sendResponse) {
     if (request.screen) {
         screenHandler();
         sendResponse({data: "screen from runtime message started"});
+    }
+}
+
+function commandListener(command) {
+    console.log("[commandListener]: command is", command);
+
+    switch(command){
+        case "webcam":
+            webcamHandler();
+            break;
+        case "screen":
+            screenHandler();
+            break;
+        default:
+            console.log("[commandListener]: unexpected command", command);
+            break;
     }
 }
 

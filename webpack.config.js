@@ -13,12 +13,6 @@ const optionsHtmlWebpackPluginOptions = {
     filename: "options.html",
     chunks: ["options"]
 };
-const getUPHtmlWebpackPluginOptions = {
-    title: "gifster",
-    template: "get-user-permission.html",
-    filename: "get-user-permission.html",
-    chunks: ["get-user-permission"]
-};
 const gifRecorderCopyWebpackPluginOptions = [{from: "scripts/gif-recorder.js", to: "gif-recorder.js"}];
 
 module.exports = {
@@ -26,8 +20,7 @@ module.exports = {
         popup: "./scripts/popup.js",
         content: "./scripts/content.js",
         background: "./scripts/background.js",
-        options: "./scripts/options.js",
-        'get-user-permission': "./scripts/get-user-permission.js"
+        options: "./scripts/options.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -67,16 +60,11 @@ module.exports = {
     resolve: {
         modules: [
             "node_modules"
-        ],
-        alias: {
-            jQuery: "jquery/src/jquery",
-            $: "jquery/src/jquery"
-        }
+        ]
     },
     plugins: [
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(optionsHtmlWebpackPluginOptions),
-        new HtmlWebpackPlugin(getUPHtmlWebpackPluginOptions),
         new CopyWebpackPlugin(gifRecorderCopyWebpackPluginOptions)
     ]
 };

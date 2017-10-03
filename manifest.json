@@ -5,7 +5,6 @@
   "description": "extension to make .gif animations",
   "icons": {
     "16": "icon16.png",
-    "48": "icon48.png",
     "128": "icon128.png"
   },
   "content_scripts": [
@@ -23,8 +22,22 @@
   "options_page": "options.html",
   "browser_action": {
     "default_title": "gifster",
-    "default_icon": "icon48.png",
+    "default_icon": "icon128.png",
     "default_popup": "popup.html"
+  },
+  "commands": {
+    "webcam": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "record gif from webcam stream"
+    },
+    "screen": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "record gif from screen stream"
+    }
   },
   "permissions": [
     "*://*/*",
@@ -32,6 +45,7 @@
     "tabCapture",
     "tabs",
     "storage",
-    "background"
+    "background",
+    "notifications"
   ]
 }
