@@ -13,7 +13,12 @@ const optionsHtmlWebpackPluginOptions = {
     filename: "options.html",
     chunks: ["options"]
 };
-const gifRecorderCopyWebpackPluginOptions = [{from: "scripts/gif-recorder.js", to: "gif-recorder.js"}];
+const copyWebpackPluginOptions = [
+    {from: "scripts/gif-recorder.js", to: "gif-recorder.js"},
+    {from: "static/icon16.png", to: "icon16.png"},
+    {from: "static/icon128.png", to: "icon128.png"},
+    {from: "manifest.json", to: "manifest.json"}
+];
 
 module.exports = {
     entry: {
@@ -39,21 +44,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.(png|json)$/,
-                loader: "file-loader",
-                options: {
-                    name: '[name].[ext]'
-                },
                 exclude: path.resolve(__dirname, "node_modules")
-            },
-            {
-                test: /\.(woff|woff2)$/,
-                loader: "file-loader",
-                options: {
-                    name: '/fonts/[name].[ext]'
-                }
             }
         ]
     },
@@ -65,6 +56,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(optionsHtmlWebpackPluginOptions),
-        new CopyWebpackPlugin(gifRecorderCopyWebpackPluginOptions)
+        new CopyWebpackPlugin(copyWebpackPluginOptions)
     ]
 };

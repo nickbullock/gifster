@@ -1,7 +1,3 @@
-import "../manifest.json";
-import "../static/icon16.png";
-import "../static/icon128.png";
-
 document.addEventListener("DOMContentLoaded",
     function popupController() {
         const SCREEN = ".screen";
