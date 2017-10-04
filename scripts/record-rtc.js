@@ -4259,12 +4259,17 @@ function GifRecorder(mediaStream, config) {
      * recorder.record();
      */
     this.record = function() {
+        if (!isLoadedMetaData) {
+            setTimeout(self.record, 1000);
+            return;
+        }
+
         if (!isHTMLObject) {
             if (!config.width) {
                 config.width = video.offsetWidth || 320;
             }
 
-            if (!this.height) {
+            if (!config.height) {
                 config.height = video.offsetHeight || 240;
             }
 
@@ -4317,8 +4322,6 @@ function GifRecorder(mediaStream, config) {
         gifEncoder.start();
 
         startTime = Date.now();
-
-        var self = this;
 
         function drawVideoFrame() {
             var time = Date.now();
@@ -4460,10 +4463,17 @@ function GifRecorder(mediaStream, config) {
         }
     }
 
+    var isLoadedMetaData = true;
+
     if (!isHTMLObject) {
         var video = document.createElement('video');
         video.muted = true;
         video.autoplay = true;
+
+        isLoadedMetaData = false;
+        video.onloadedmetadata = function() {
+            isLoadedMetaData = true;
+        };
 
         if (typeof video.srcObject !== 'undefined') {
             video.srcObject = mediaStream;
@@ -4478,6 +4488,8 @@ function GifRecorder(mediaStream, config) {
     var startTime, endTime, lastFrameTime;
 
     var gifEncoder;
+
+    var self = this;
 }
 
 if (typeof RecordRTC !== 'undefined') {

@@ -15,7 +15,14 @@ function screenHandler() {
         video: true,
         videoConstraints: {
             mandatory: {
-                chromeMediaSource: 'tab'
+                chromeMediaSource: 'tab',
+                maxWidth: 1920,
+                maxHeight: 1080,
+                maxFrameRate: 30,
+                minFrameRate: 30,
+                minWidth: 1280,
+                minHeight: 1024,
+                minAspectRatio: 1.77
             }
         }
     };
@@ -24,14 +31,17 @@ function screenHandler() {
         activeStream = stream;
         const options = {
             type: "gif",
-            showMousePointer: true,
+            //заменить на значения из настроек
+            showMousePointer: null,
+            height: null,
+            width: null
         };
 
         rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(30000, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
+        rrtc.setRecordingDuration(3000, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
         rrtc.startRecording();
 
-        createRecordingProgressNotification(30000);
+        createRecordingProgressNotification(3000);
     }
 
     chrome.tabCapture.capture(mediaOptions, screenHandlerSuccess);
@@ -50,10 +60,10 @@ function webcamHandler() {
         };
 
         rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(30000, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
+        rrtc.setRecordingDuration(3000, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
         rrtc.startRecording();
 
-        createRecordingProgressNotification(30000);
+        createRecordingProgressNotification(3000);
     }
 
     navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
