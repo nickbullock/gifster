@@ -45,6 +45,22 @@ module.exports = {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
                 exclude: path.resolve(__dirname, "node_modules")
+            },
+            {
+                test: /\.(ttf)$/,
+                loader: "file-loader",
+                options: {
+                    name: '[name].[ext]'
+                },
+                exclude: path.resolve(__dirname, "node_modules")
+            },
+            {
+                test: /\.(png)$/,
+                loader: "file-loader",
+                options: {
+                    name: '[name].[ext]'
+                },
+                exclude: path.resolve(__dirname, "node_modules")
             }
         ]
     },

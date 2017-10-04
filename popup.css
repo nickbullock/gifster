@@ -1,0 +1,71 @@
+@font-face {
+    font-family: font;
+    src: url(./static/font.ttf);
+}
+html, body{
+    margin: 0;
+    padding: 0;
+}
+.popup {
+    width: 200px;
+}
+.list {
+    padding: 0;
+    margin: 0;
+}
+.list__item {
+    width: 100%;
+    height: 64px;
+    position: relative;
+    font-family: font;
+    letter-spacing: 1px;
+    font-size: 23px;
+    cursor: pointer;
+    transition: background .5s ease;
+}
+.list__item:hover {
+    background: rgba(160, 220, 255, 0.3);
+    transition: background .5s ease;
+}
+.item__icon {
+    width: 50px;
+    float: left;
+    height: inherit;
+}
+.item__icon img {
+    margin-top: 25%;
+    float: right;
+}
+.item__title {
+    width: calc(100% - 50px);
+    height: inherit;
+    float: left;
+    text-align: center;
+}
+.item__subtitle {
+    width: 100%;
+    font-size: 15px;
+    text-align: center;
+    color: lightgray;
+}
+.title__content {
+    margin-top: 10px;
+    margin-right: 15px;
+}
+.title__content_options {
+    margin-top: 18px;
+    margin-right: 20px;
+}
+.divider {
+    height: 1px;
+    width: 90%;
+    background: #eee;
+    margin: 0 5% 0 5%;
+}
+
+
+
+
+
+
+

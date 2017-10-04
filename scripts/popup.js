@@ -1,8 +1,13 @@
+import "./../popup.css";
+import "./../static/webcam.png";
+import "./../static/screen.png";
+import "./../static/settings.png";
+
 document.addEventListener("DOMContentLoaded",
     function popupController() {
-        const SCREEN = ".screen";
-        const WEBCAM = ".webcam";
-        const OPTIONS = ".options";
+        const SCREEN = ".list__item_screen";
+        const WEBCAM = ".list__item_webcam";
+        const OPTIONS = ".list__item_options";
 
         function init() {
             registerButtonCallbackList();
