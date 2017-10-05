@@ -47,7 +47,7 @@ module.exports = {
                 exclude: path.resolve(__dirname, "node_modules")
             },
             {
-                test: /\.(ttf)$/,
+                test: /\.(ttf|otf)$/,
                 loader: "file-loader",
                 options: {
                     name: '[name].[ext]'

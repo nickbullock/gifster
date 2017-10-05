@@ -1,10 +1,11 @@
 {
   "name": "gifster",
-  "version": "1.0.0",
-  "description": "chrome extension to make .gif",
+  "version": "0.0.1",
+  "description": "Chrome extension to record .gif animations",
   "main": "background.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "webpack --config webpack.dev.config.js",
+    "prod": "webpack --config webpack.prod.config.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,8 @@
   "keywords": [
     "gif",
     "animation",
-    "record"
+    "record",
+    "gifster"
   ],
   "author": "Nikita Balakirev",
   "license": "MIT",

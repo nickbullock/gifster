@@ -18,8 +18,8 @@ function screenHandler() {
                 chromeMediaSource: 'tab',
                 maxWidth: 1920,
                 maxHeight: 1080,
-                maxFrameRate: 30,
-                minFrameRate: 30,
+                maxFrameRate: 60,
+                minFrameRate: 5,
                 minWidth: 1280,
                 minHeight: 1024,
                 minAspectRatio: 1.77
