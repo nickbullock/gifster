@@ -1,6 +1,6 @@
 @font-face {
     font-family: font;
-    src: url(./static/font.ttf);
+    src: url(./../static/font.ttf);
 }
 html, body{
     margin: 0;

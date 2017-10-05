@@ -1,4 +1,4 @@
-import "./../popup.css";
+import "./../style/popup.css";
 import "./../static/webcam.png";
 import "./../static/screen.png";
 import "./../static/settings.png";

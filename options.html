@@ -11,25 +11,50 @@
             <div class="header__title">.gifster</div>
             <div class="header__subtitle">Record anything to gif animation more flexible</div>
         </div>
-        <div class="divider"></div>
-        <div class="options__body">
-            <form name="settings">
-                <div class="settings__block">
-                    <div class="block__title">
-                        Recording time
-                    </div>
-                    <div class="block__body">
-                        <input type="range" min="0" max="30" class="range range--material">
-                    </div>
-                </div>
 
-                <div class="settings__block">
-                    <div class="block__title">
-                        Frame rate
+        <div class="divider"></div>
+
+        <div class="container options__body col-12">
+
+            <form name="settings">
+                <div class="settings col-12 row center">
+
+                    <div class="col-3 settings__block settings__block_rec-time">
+                        <div class="block__title">
+                            Recording time is <span class="block__value"></span>
+                        </div>
+                        <div class="block__body">
+                            <input autofocus id="rec-time" type="range" min="1" max="30" class="range range--material" required>
+                        </div>
                     </div>
-                    <div class="block__body">
-                        <input type="range" min="0" max="30" class="range range--material">
+
+                    <div class="col-3 settings__block settings__block_frame-rate">
+                        <div class="block__title">
+                            Frame rate is <span class="block__value"></span>
+                        </div>
+                        <div class="block__body">
+                            <input id="frame-rate" type="range" min="1" max="30" class="range range--material" required>
+                        </div>
                     </div>
+
+                    <div class="col-3 settings__block settings__block_resolution">
+                        <div class="block__title">
+                            Resolution is <span class="block__value"></span>
+                        </div>
+                        <div class="block__body">
+                            <input id="resolution" type="range" min="0" max="3" class="range range--material" required>
+                        </div>
+                    </div>
+
+                    <div class="col-3 settings__block settings__block_quality">
+                        <div class="block__title">
+                            Quality is <span class="block__value"></span>
+                        </div>
+                        <div class="block__body">
+                            <input id="quality" type="range" min="1" max="10" class="range range--material" required>
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </div>

@@ -31,10 +31,9 @@ function screenHandler() {
         activeStream = stream;
         const options = {
             type: "gif",
-            //заменить на значения из настроек
-            showMousePointer: null,
             height: null,
-            width: null
+            width: null,
+            quality: null
         };
 
         rrtc = RecordRTC(stream, options);
@@ -79,16 +78,23 @@ function recordSaveHandler() {
 
 function defaultErrorHandler(e) {
     console.error(e);
+
     switch (e.name){
         case "DevicesNotFoundError":
             chrome.notifications.create({
                 type: "basic",
                 iconUrl: chrome.extension.getURL("icon128.png"),
                 title: "Device not found",
-                message: "gifster didn't find requested device"
+                message: "Gifster didn't find requested device"
             });
             break;
         default:
+            chrome.notifications.create({
+                type: "basic",
+                iconUrl: chrome.extension.getURL("icon128.png"),
+                title: "Gifster got an error :(",
+                message: "Please contact developer"
+            });
             break;
     }
 }
