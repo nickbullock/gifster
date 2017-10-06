@@ -19,21 +19,21 @@
             <form name="settings">
                 <div class="settings col-12 row center">
 
-                    <div class="col-3 settings__block settings__block_rec-time">
+                    <div class="col-3 settings__block settings__block_duration">
                         <div class="block__title">
-                            Recording time is <span class="block__value"></span>
+                            Duration is <span class="block__value"></span>
                         </div>
                         <div class="block__body">
-                            <input autofocus id="rec-time" type="range" min="1" max="30" class="range range--material" required>
+                            <input autofocus id="duration" type="range" min="1" max="30" class="range range--material" required>
                         </div>
                     </div>
 
-                    <div class="col-3 settings__block settings__block_frame-rate">
+                    <div class="col-3 settings__block settings__block_fps">
                         <div class="block__title">
                             Frame rate is <span class="block__value"></span>
                         </div>
                         <div class="block__body">
-                            <input id="frame-rate" type="range" min="1" max="30" class="range range--material" required>
+                            <input id="fps" type="range" min="1" max="30" class="range range--material" required>
                         </div>
                     </div>
 
@@ -56,7 +56,22 @@
                     </div>
 
                 </div>
+
+                <div class="col-4 center">
+                    <button class="save-btn">Save options</button>
+                </div>
             </form>
+        </div>
+        <div class="options__footer">
+            <div class="container">
+                <div class="col-4">
+                    <h4>Credits</h4>
+                    <div></div>
+                </div>
+                <div class="col-4"></div>
+                <div class="col-4"></div>
+                <div class="col-4"></div>
+            </div>
         </div>
     </div>
 </body>

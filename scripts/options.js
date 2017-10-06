@@ -4,29 +4,35 @@ import "./../style/options.css";
 document.addEventListener("DOMContentLoaded",
     function OptionsController() {
         let options = {};
+        const defaultOptions = {
+            duration: 5,
+            fps: 15,
+            width: 858,
+            height: 480,
+            quality: 10
+        };
 
-        const REC_TIME = "input#rec-time";
-        const FRAME_RATE = "input#frame-rate";
+        const DURATION = "input#duration";
+        const FRAME_RATE = "input#fps";
         const RESOLUTION = "input#resolution";
         const QUALITY = "input#quality";
 
         chrome.runtime.sendMessage({optionsInit: true});
 
-        document.querySelector(REC_TIME).addEventListener("change", changeRecTimeBlockValue);
-        document.querySelector(FRAME_RATE).addEventListener("change", changeFrameRateBlockValue);
-        document.querySelector(RESOLUTION).addEventListener("change", changeResolutionBlockValue);
-        document.querySelector(QUALITY).addEventListener("change", changeQualityBlockValue);
+        document.querySelector(DURATION).addEventListener("change", changeDurationValue);
+        document.querySelector(FRAME_RATE).addEventListener("change", changeFrameRateValue);
+        document.querySelector(RESOLUTION).addEventListener("change", changeResolutionValue);
+        document.querySelector(QUALITY).addEventListener("change", changeQualityValue);
 
-        function changeRecTimeBlockValue (event) {
+        function changeDurationValue (event) {
             options[event.target.id] = event.target.value;
-            event.target.parentNode.previousSibling.previousSibling.children[0].innerHTML = event.target.value + "s";
+            document.querySelector(".settings__block_duration > .block__title > .block__value").innerHTML = event.target.value + "s";
         }
-        function changeFrameRateBlockValue (event) {
+        function changeFrameRateValue (event) {
             options[event.target.id] = event.target.value;
-            event.target.parentNode.previousSibling.previousSibling.children[0].innerHTML = event.target.value + "fps";
+            document.querySelector(".settings__block_fps > .block__title > .block__value").innerHTML = event.target.value + "fps";
         }
-        function changeResolutionBlockValue (event) {
-            console.log(event.target.value)
+        function changeResolutionValue (event) {
             switch(event.target.value){
                 case "0":
                     options.width = 480;
@@ -45,12 +51,41 @@ document.addEventListener("DOMContentLoaded",
                     options.height = 1080;
                     break;
             }
-            event.target.parentNode.previousSibling.previousSibling.children[0].innerHTML = `${options.width}/${options.height}px`;
+            document.querySelector(".settings__block_resolution > .block__title > .block__value").innerHTML = `${options.height}p`;
         }
-        function changeQualityBlockValue (event) {
+        function changeQualityValue (event) {
             options[event.target.id] = event.target.value;
-            event.target.parentNode.previousSibling.previousSibling.children[0].innerHTML = event.target.value;
+            document.querySelector(".settings__block_quality > .block__title > .block__value").innerHTML = event.target.value;
         }
+
+        function init(options, isFirstInit) {
+            if(isFirstInit){
+                chrome.storage.set("gifsterOptions", defaultOptions);
+            }
+
+            changeDurationValue({target:{value: defaultOptions.duration}});
+            changeFrameRateValue({target:{value: defaultOptions.fps}});
+            changeQualityValue({target:{value: defaultOptions.quality}});
+            changeResolutionValue({target:{value: "1"}});
+        }
+
+        function save() {
+            console.log("save", options);
+
+            chrome.storage.set("gifsterOptions", options);
+        }
+
+        chrome.storage.sync.get(
+            "gifsterOptions",
+            (options) => {
+                if(options){
+                    init(options, false);
+                }
+                else{
+                    init(defaultOptions, true)
+                }
+            }
+        );
 
 
 
