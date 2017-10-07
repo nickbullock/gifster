@@ -9,7 +9,7 @@
 
         <div class="options__header">
             <div class="header__title">.gifster</div>
-            <div class="header__subtitle">Record anything to gif animation more flexible</div>
+            <div class="header__subtitle">Record gif animations from browser more flexible</div>
         </div>
 
         <div class="divider"></div>
@@ -42,7 +42,7 @@
                             Resolution is <span class="block__value"></span>
                         </div>
                         <div class="block__body">
-                            <input id="resolution" type="range" min="0" max="3" class="range range--material" required>
+                            <input id="resolution" type="range" min="1" max="4" class="range range--material" required>
                         </div>
                     </div>
 
@@ -51,26 +51,35 @@
                             Quality is <span class="block__value"></span>
                         </div>
                         <div class="block__body">
-                            <input id="quality" type="range" min="1" max="10" class="range range--material" required>
+                            <input id="quality" type="range" min="1" max="20" class="range range--material" required>
                         </div>
                     </div>
 
                 </div>
 
-                <div class="col-4 center">
-                    <button class="save-btn">Save options</button>
+                <div class="col-4 center save-btn__wrapper">
+                    <a class="save-btn">Save options</a>
                 </div>
             </form>
         </div>
         <div class="options__footer">
-            <div class="container">
-                <div class="col-4">
-                    <h4>Credits</h4>
-                    <div></div>
+            <div class="container row">
+                <div class="col-3">
+                    <h5>Credits</h5>
+                    <div>© 2017 <a href="https://github.com/nickbullock">Nikita Balakirev</a></div>
+                    <div><a href="mailto=balakirevnikita@yandex.ru?subject=Gifster">balakirevnikita@yandex.ru</a></div>
                 </div>
-                <div class="col-4"></div>
-                <div class="col-4"></div>
-                <div class="col-4"></div>
+                <div class="col-3">
+                    <h5>Inspiration</h5>
+                    <div>
+                        <a href="https://github.com/yahoo/gifshot">gifshot</a>
+                    </div>
+                    <div>
+                        <a href="https://github.com/muaz-khan/RecordRTC">RecordRTC</a>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+                <div class="col-3"></div>
             </div>
         </div>
     </div>
