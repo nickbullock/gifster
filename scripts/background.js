@@ -11,61 +11,83 @@ function init() {
 }
 
 function screenHandler() {
-    const mediaOptions = {
-        video: true,
-        videoConstraints: {
-            mandatory: {
-                chromeMediaSource: 'tab',
-                maxWidth: 1920,
-                maxHeight: 1080,
-                maxFrameRate: 60,
-                minFrameRate: 5,
-                minWidth: 1280,
-                minHeight: 1024,
-                minAspectRatio: 1.77
+    chrome.storage.sync.get(
+        "gifsterOptions",
+        (options) => {
+            const gifsterOptions = options.gifsterOptions;
+
+            const mediaOptions = {
+                video: true,
+                videoConstraints: {
+                    mandatory: {
+                        chromeMediaSource: 'tab',
+                        maxWidth: 1920,
+                        maxHeight: 1080,
+                        maxFrameRate: 60,
+                        minFrameRate: 5,
+                        minWidth: 480,
+                        minHeight: 360,
+                        minAspectRatio: 1.77
+                    }
+                }
+            };
+
+            function screenHandlerSuccess(stream) {
+                activeStream = stream;
+                const options = {
+                    type: "gif",
+                    height: gifsterOptions.height,
+                    width: gifsterOptions.width,
+                    quality: 21 - gifsterOptions.quality,
+                    frameRate: gifsterOptions.frameRate
+                };
+
+                console.log(">>>>>screen opts", options)
+
+                rrtc = RecordRTC(stream, options);
+                rrtc.setRecordingDuration(gifsterOptions.duration, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
+                rrtc.startRecording();
+
+                createRecordingProgressNotification(gifsterOptions.duration);
             }
+
+            chrome.tabCapture.capture(mediaOptions, screenHandlerSuccess);
         }
-    };
+    );
 
-    function screenHandlerSuccess(stream) {
-        activeStream = stream;
-        const options = {
-            type: "gif",
-            height: null,
-            width: null,
-            quality: null
-        };
-
-        rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(3000, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
-        rrtc.startRecording();
-
-        createRecordingProgressNotification(3000);
-    }
-
-    chrome.tabCapture.capture(mediaOptions, screenHandlerSuccess);
 }
 
 function webcamHandler() {
-    const mediaOptions = {
-        video: true
-    };
+    chrome.storage.sync.get(
+        "gifsterOptions",
+        (options) => {
+            const gifsterOptions = options.gifsterOptions;
 
-    function webcamHandlerSuccess(stream) {
-        activeStream = stream;
+            const mediaOptions = {
+                video: true
+            };
 
-        const options = {
-            type: "gif"
-        };
+            function webcamHandlerSuccess(stream) {
+                activeStream = stream;
 
-        rrtc = RecordRTC(stream, options);
-        rrtc.setRecordingDuration(3000, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
-        rrtc.startRecording();
+                const options = {
+                    type: "gif",
+                    width: gifsterOptions.width,
+                    height: gifsterOptions.height,
+                    quality: 21 - gifsterOptions.quality,
+                    frameRate: gifsterOptions.fps
+                };
 
-        createRecordingProgressNotification(3000);
-    }
+                rrtc = RecordRTC(stream, options);
+                rrtc.setRecordingDuration(gifsterOptions.duration, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
+                rrtc.startRecording();
 
-    navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
+                createRecordingProgressNotification(gifsterOptions.duration);
+            }
+
+            navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
+        }
+    );
 }
 
 function recordSaveHandler() {

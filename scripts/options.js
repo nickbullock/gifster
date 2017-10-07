@@ -37,27 +37,6 @@ document.addEventListener("DOMContentLoaded",
             document.querySelector(`.settings__block_${key} > .block__title > .block__value`).innerHTML = value;
         }
 
-        function resolutionResolver(resolution) {
-            switch(resolution) {
-                case "0":
-                    options.width = 480;
-                    options.height = 360;
-                    break;
-                case "1":
-                    options.width = 858;
-                    options.height = 480;
-                    break;
-                case "2":
-                    options.width = 1280;
-                    options.height = 720;
-                    break;
-                case "3":
-                    options.width = 1920;
-                    options.height = 1080;
-                    break;
-            }
-        }
-
         function init(optionsInit, isFirstInit) {
             if(isFirstInit){
                 chrome.storage.sync.set({gifsterOptions: defaultOptions});
@@ -75,14 +54,34 @@ document.addEventListener("DOMContentLoaded",
         }
 
         function save() {
-            const optionsInit = Object.assign({}, options);
-            resolutionResolver(optionsInit.resolution);
+            const optionsInit = {};
+            Object.assign(optionsInit, options);
+            switch(optionsInit.resolution.toString()) {
+                case "1":
+                    optionsInit.width = 480;
+                    optionsInit.height = 360;
+                    break;
+                case "2":
+                    optionsInit.width = 858;
+                    optionsInit.height = 480;
+                    break;
+                case "3":
+                    optionsInit.width = 1280;
+                    optionsInit.height = 720;
+                    break;
+                case "4":
+                    optionsInit.width = 1920;
+                    optionsInit.height = 1080;
+                    break;
+            }
 
-            console.log("[OptionsController.save] saving options", optionsInit);
+            Object.keys(optionsInit).forEach(key => optionsInit[key] = parseInt(optionsInit[key]));
 
             chrome.storage.sync.set(
                 {gifsterOptions: optionsInit},
                 () => {
+                    console.log("[OptionsController.save] saved options", optionsInit);
+
                     chrome.notifications.create({
                         type: "basic",
                         iconUrl: chrome.extension.getURL("icon128.png"),
