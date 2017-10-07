@@ -42,8 +42,6 @@ function screenHandler() {
                     frameRate: gifsterOptions.frameRate
                 };
 
-                console.log(">>>>>screen opts", options)
-
                 rrtc = RecordRTC(stream, options);
                 rrtc.setRecordingDuration(gifsterOptions.duration, recordSaveHandler.bind({filename: `screen-${Date.now()}.gif`}));
                 rrtc.startRecording();
@@ -58,50 +56,15 @@ function screenHandler() {
 }
 
 function webcamHandler() {
-    chrome.storage.sync.get(
-        "gifsterOptions",
-        (options) => {
-            const gifsterOptions = options.gifsterOptions;
-
-            const mediaOptions = {
-                video: true
-            };
-
-            function webcamHandlerSuccess(stream) {
-                activeStream = stream;
-
-                const options = {
-                    type: "gif",
-                    width: gifsterOptions.width,
-                    height: gifsterOptions.height,
-                    quality: 21 - gifsterOptions.quality,
-                    frameRate: gifsterOptions.fps
-                };
-
-                rrtc = RecordRTC(stream, options);
-                rrtc.setRecordingDuration(gifsterOptions.duration, recordSaveHandler.bind({filename: `webcam-${Date.now()}.gif`}));
-                rrtc.startRecording();
-
-                createRecordingProgressNotification(gifsterOptions.duration);
-            }
-
-            navigator.getUserMedia(mediaOptions, webcamHandlerSuccess, defaultErrorHandler);
-        }
-    );
-}
-
-function recordSaveHandler() {
-    const filename = this.filename;
-
-    activeStream.getVideoTracks().forEach(track => track.stop());
-    activeStream = null;
-    rrtc.save(filename);
+    chrome.tabs.query({active: true}, (tabs) => {
+        chrome.tabs.executeScript(tabs[0].id, {file: "webcam.js"});
+    });
 }
 
 function defaultErrorHandler(e) {
     console.error(e);
 
-    switch (e.name){
+    switch (e.name) {
         case "DevicesNotFoundError":
             chrome.notifications.create({
                 type: "basic",
@@ -143,7 +106,7 @@ function messageListener(request, sender, sendResponse) {
 function commandListener(command) {
     console.log("[commandListener]: command is", command);
 
-    switch(command){
+    switch (command) {
         case "webcam":
             webcamHandler();
             break;
@@ -155,8 +118,9 @@ function commandListener(command) {
     }
 }
 
-function createRecordingProgressNotification(timeout){
-    if(!timeout){
+
+function createRecordingProgressNotification(timeout) {
+    if (!timeout) {
         console.error("[createRecordingProgressNotification] timeout is not provided");
         return;
     }
@@ -172,7 +136,7 @@ function createRecordingProgressNotification(timeout){
         (id) => {
             let progress = 0;
 
-            const interval = setInterval(function() {
+            const interval = setInterval(function () {
                 progress += 10;
                 if (progress <= 100) {
                     chrome.notifications.update(id, {progress: progress}, function (updated) {
@@ -185,7 +149,7 @@ function createRecordingProgressNotification(timeout){
                     chrome.notifications.clear(id);
                     clearInterval(interval);
                 }
-            }, (timeout/10))
+            }, (timeout / 10))
         }
     );
 }

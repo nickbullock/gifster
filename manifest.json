@@ -10,13 +10,13 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*/*"
+        "<all_urls>"
       ],
       "js": ["content.js"]
     }
   ],
   "background": {
-    "scripts": ["gif-recorder.js","background.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "options_page": "options.html",

@@ -14,7 +14,7 @@ const optionsHtmlWebpackPluginOptions = {
     chunks: ["options"]
 };
 const copyWebpackPluginOptions = [
-    {from: "scripts/gif-recorder.js", to: "gif-recorder.js"},
+    {from: "scripts/encoders.js", to: "encoders.js"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
     {from: "manifest.json", to: "manifest.json"}
@@ -25,7 +25,8 @@ module.exports = {
         popup: "./scripts/popup.js",
         content: "./scripts/content.js",
         background: "./scripts/background.js",
-        options: "./scripts/options.js"
+        options: "./scripts/options.js",
+        webcam: "./scripts/webcam.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),
