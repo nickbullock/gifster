@@ -32,11 +32,12 @@ class ContentController {
             counter++;
 
             switch (counter){
-                case 4:
+                case 3:
                     timer.innerHTML = "Recording";
                     break;
-                case 5:
+                case 4:
                     clearInterval(interval);
+                    timer.remove();
                     break;
                 default:
                     timer.innerHTML--;
