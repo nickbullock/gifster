@@ -34,3 +34,11 @@
     animation: fadeout 0.8s;
     animation-fill-mode: forwards;
 }
+
+.gifster-timer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    color: #850f5a;
+    font-size: 40px;
+}

@@ -41,6 +41,10 @@ export default class ScreenController {
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) => {
+                chrome.tabs.query({active: true}, function (tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {timer: true});
+                });
+
                 const gifsterOptions = opts.gifsterOptions;
 
                 const options = {
