@@ -23,18 +23,18 @@ export default class WebcamController {
     }
 
     preview(stream) {
-        const videoExists = document.querySelector(this.previewSelector);
+        const previewExists = document.querySelector(this.previewSelector);
 
-        if (!videoExists) {
-            const video = document.createElement('video');
+        if (!previewExists) {
+            const preview = document.createElement('video');
 
-            video.autoplay = true;
-            video.muted = true;
-            video.style = "position:fixed;width:300px;border-radius:150px;left:50px;bottom:50px";
-            video.srcObject = stream;
-            video.id = this.previewSelector;
+            preview.autoplay = true;
+            preview.muted = true;
+            preview.srcObject = stream;
+            preview.id = this.previewSelector;
+            preview.className = "gifster-webcam-preview preview-fade-in";
 
-            document.querySelector("body").appendChild(video);
+            document.querySelector("body").appendChild(preview);
         }
     }
 
@@ -94,12 +94,16 @@ export default class WebcamController {
         const preview = document.getElementById(this.previewSelector);
 
         if(preview){
-            preview.remove();
+            preview.className = "gifster-webcam-preview preview-fade-out";
         }
-        this.activeStream.getVideoTracks().forEach(track => track.stop());
-        this.activeStream = null;
 
         this.download();
+
+        setTimeout(() => {
+            this.activeStream.getVideoTracks().forEach(track => track.stop());
+            this.activeStream = null;
+            preview.remove();
+        }, 1500);
     }
 
     download() {

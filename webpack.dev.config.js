@@ -15,6 +15,7 @@ const optionsHtmlWebpackPluginOptions = {
 };
 const copyWebpackPluginOptions = [
     {from: "scripts/vendor/encoders.js", to: "encoders.js"},
+    {from: "style/content.css", to: "content.css"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
     {from: "manifest.json", to: "manifest.json"}

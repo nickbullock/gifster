@@ -13,7 +13,10 @@ class BackgroundController {
     }
 
     webcamHandler() {
-        chrome.tabs.query({active: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {webcam: true}));
+        chrome.tabs.query({active: true}, (tabs) => {
+            chrome.tabs.insertCSS(tabs[0].id, {file: "content.css"});
+            chrome.tabs.sendMessage(tabs[0].id, {webcam: true});
+        });
     }
 
     messageListener(request, sender, sendResponse) {
