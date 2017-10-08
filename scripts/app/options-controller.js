@@ -1,5 +1,5 @@
-import "./../style/simple-grid.css";
-import "./../style/options.css";
+import "./../../style/simple-grid.css";
+import "./../../style/options.css";
 
 document.addEventListener("DOMContentLoaded",
     function OptionsController() {

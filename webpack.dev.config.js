@@ -14,7 +14,7 @@ const optionsHtmlWebpackPluginOptions = {
     chunks: ["options"]
 };
 const copyWebpackPluginOptions = [
-    {from: "scripts/encoders.js", to: "encoders.js"},
+    {from: "scripts/vendor/encoders.js", to: "encoders.js"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
     {from: "manifest.json", to: "manifest.json"}
@@ -22,11 +22,10 @@ const copyWebpackPluginOptions = [
 
 module.exports = {
     entry: {
-        popup: "./scripts/popup.js",
-        content: "./scripts/content.js",
-        background: "./scripts/background.js",
-        options: "./scripts/options.js",
-        webcam: "./scripts/webcam.js"
+        popup: "./scripts/app/popup-controller.js",
+        content: "./scripts/app/content-controller.js",
+        background: "./scripts/app/background-controller.js",
+        options: "./scripts/app/options-controller.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),

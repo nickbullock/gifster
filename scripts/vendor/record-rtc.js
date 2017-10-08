@@ -4323,8 +4323,14 @@ function GifRecorder(mediaStream, config) {
 
         startTime = Date.now();
 
-        function drawVideoFrame() {
-            var time = Date.now();
+        function drawVideoFrame(time) {
+            if(config.rafDisabled){
+                time = Date.now();
+            }
+
+            if (self.clearedRecordedData === true) {
+                return;
+            }
 
             if (isPausedRecording) {
                 return setTimeout(function() {
@@ -4332,7 +4338,9 @@ function GifRecorder(mediaStream, config) {
                 }, 100);
             }
 
-            // lastAnimationFrame = requestAnimationFrame(drawVideoFrame);
+            if(!config.rafDisabled){
+                lastAnimationFrame = requestAnimationFrame(drawVideoFrame);
+            }
 
             if (typeof lastFrameTime === undefined) {
                 lastFrameTime = time;
@@ -4361,8 +4369,12 @@ function GifRecorder(mediaStream, config) {
             lastFrameTime = time;
         }
 
-        // lastAnimationFrame = requestAnimationFrame(drawVideoFrame);
-        lastAnimationFrame = setInterval(drawVideoFrame, 17);
+        if(config.rafDisabled){
+            lastAnimationFrame = setInterval(drawVideoFrame, 17);
+        }
+        else{
+            lastAnimationFrame = requestAnimationFrame(drawVideoFrame);
+        }
 
         if (config.initCallback) {
             config.initCallback();
@@ -4381,8 +4393,12 @@ function GifRecorder(mediaStream, config) {
      */
     this.stop = function() {
         if (lastAnimationFrame) {
-            // cancelAnimationFrame(lastAnimationFrame);
-            clearInterval(lastAnimationFrame);
+            if(config.rafDisabled){
+                clearInterval(lastAnimationFrame);
+            }
+            else{
+                cancelAnimationFrame(lastAnimationFrame);
+            }
         }
 
         endTime = Date.now();
@@ -4435,6 +4451,7 @@ function GifRecorder(mediaStream, config) {
      * recorder.clearRecordedData();
      */
     this.clearRecordedData = function() {
+        self.clearedRecordedData = true;
         if (!gifEncoder) {
             return;
         }
