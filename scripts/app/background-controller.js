@@ -1,4 +1,5 @@
 import ScreenController from "./screen-controller";
+import WebcamController from "./webcam-controller";
 
 class BackgroundController {
     start() {
@@ -6,8 +7,8 @@ class BackgroundController {
         chrome.commands.onCommand.addListener(this.commandListener.bind(this));
     }
 
-    screenHandler() {
-        const controller = new ScreenController();
+    screenHandlerBG() {
+        const controller = new ScreenController(true);
 
         controller.start();
     }
@@ -17,6 +18,12 @@ class BackgroundController {
             chrome.tabs.insertCSS(tabs[0].id, {file: "content.css"});
             chrome.tabs.sendMessage(tabs[0].id, {webcam: true});
         });
+    }
+
+    webcamHandlerBG() {
+        const controller = new WebcamController(true);
+
+        controller.start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -32,9 +39,44 @@ class BackgroundController {
             this.webcamHandler();
             sendResponse({data: "webcam from runtime message started"});
         }
+        if (request.webcamBG) {
+            this.webcamHandlerBG();
+            sendResponse({data: "webcamBG from runtime message started"});
+        }
         if (request.screen) {
             this.screenHandler();
             sendResponse({data: "screen from runtime message started"});
+        }
+        if(request.error){
+            switch (request.error.name) {
+                case "DevicesNotFoundError":
+                    chrome.notifications.create({
+                        type: "basic",
+                        iconUrl: chrome.extension.getURL("icon128.png"),
+                        title: "Device not found",
+                        message: "Gifster didn't find requested device"
+                    });
+                    break;
+                case "PermissionDeniedError":
+                    chrome.notifications.create({
+                        type: "basic",
+                        iconUrl: chrome.extension.getURL("icon128.png"),
+                        title: "Can't create preview",
+                        message: "Gifster can create preview on secure sites only. But gif will be recorded :)"
+                    });
+
+                    this.webcamHandlerBG();
+
+                    break;
+                default:
+                    chrome.notifications.create({
+                        type: "basic",
+                        iconUrl: chrome.extension.getURL("icon128.png"),
+                        title: "Gifster got an error :(",
+                        message: "Please contact developer"
+                    });
+                    break;
+            }
         }
     }
 
@@ -46,7 +88,7 @@ class BackgroundController {
                 this.webcamHandler();
                 break;
             case "screen":
-                this.screenHandler();
+                this.screenHandlerBG();
                 break;
             default:
                 break;

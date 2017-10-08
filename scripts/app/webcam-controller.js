@@ -6,9 +6,10 @@ window.GIFEncoder = encoders.GIFEncoder;
 
 export default class WebcamController {
 
-    constructor() {
+    constructor(rafDisabled) {
         this.rrtc = null;
         this.activeStream = null;
+        this.rafDisabled = rafDisabled;
         this.mediaOptions = {
             video: true
         };
@@ -57,7 +58,8 @@ export default class WebcamController {
                     width: gifsterOptions.width,
                     height: gifsterOptions.height,
                     quality: 21 - gifsterOptions.quality,
-                    frameRate: gifsterOptions.fps * 10
+                    frameRate: gifsterOptions.fps * 10,
+                    rafDisabled: this.rafDisabled
                 };
 
                 this.rrtc = RecordRTC(stream, options);
@@ -68,26 +70,9 @@ export default class WebcamController {
     }
 
     error(e) {
-        console.error(e);
+        console.error("[WebcamController.error] ", e);
 
-        switch (e.name) {
-            case "DevicesNotFoundError":
-                chrome.notifications.create({
-                    type: "basic",
-                    iconUrl: chrome.extension.getURL("icon128.png"),
-                    title: "Device not found",
-                    message: "Gifster didn't find requested device"
-                });
-                break;
-            default:
-                chrome.notifications.create({
-                    type: "basic",
-                    iconUrl: chrome.extension.getURL("icon128.png"),
-                    title: "Gifster got an error :(",
-                    message: "Please contact developer"
-                });
-                break;
-        }
+        chrome.runtime.sendMessage({error: {name:  e.name}});
     }
 
     stop() {

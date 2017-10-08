@@ -5,9 +5,10 @@ window.LZWEncoder = encoders.LZWEncoder;
 window.GIFEncoder = encoders.GIFEncoder;
 
 export default class ScreenController {
-    constructor() {
+    constructor(rafDisabled) {
         this.rrtc = null;
         this.activeStream = null;
+        this.rafDisabled = rafDisabled;
         this.mediaOptions = {
             video: true,
             videoConstraints: {
@@ -48,7 +49,7 @@ export default class ScreenController {
                     width: gifsterOptions.width,
                     quality: 21 - gifsterOptions.quality,
                     frameRate: gifsterOptions.frameRate * 10,
-                    rafDisabled: true
+                    rafDisabled: this.rafDisabled
                 };
 
                 this.rrtc = RecordRTC(stream, options);
