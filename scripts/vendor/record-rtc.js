@@ -4346,11 +4346,6 @@ function GifRecorder(mediaStream, config) {
                 lastFrameTime = time;
             }
 
-            // ~10 fps
-            if (time - lastFrameTime < 90) {
-                return;
-            }
-
             if (!isHTMLObject && video.paused) {
                 // via: https://github.com/muaz-khan/WebRTC-Experiment/pull/316
                 // Tweak for Android Chrome

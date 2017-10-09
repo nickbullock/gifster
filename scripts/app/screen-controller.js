@@ -63,7 +63,6 @@ export default class ScreenController {
     }
 
     stop() {
-        chrome.runtime.sendMessage({stop: true});
         this.activeStream.getVideoTracks().forEach(track => track.stop());
         this.activeStream = null;
 

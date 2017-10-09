@@ -23,7 +23,7 @@ class PopupController {
     registerButtonCallbackList() {
         document.querySelector(this.screenSelector).addEventListener("click", this.screenHandler);
         document.querySelector(this.webcamSelector).addEventListener("click", this.webcamHandler);
-        document.querySelector(this.optionsSelector).addEventListener("click", this.openOptionsPage);
+        document.querySelector(this.optionsSelector).addEventListener("click", this.optionsHandler);
     }
 
     screenHandler() {
