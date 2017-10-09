@@ -4,6 +4,9 @@ import RecordRTC from "./../vendor/record-rtc";
 window.LZWEncoder = encoders.LZWEncoder;
 window.GIFEncoder = encoders.GIFEncoder;
 
+/**
+ * Can be called from background and content scripts
+ */
 export default class WebcamController {
 
     constructor(rafDisabled) {
@@ -50,27 +53,21 @@ export default class WebcamController {
 
         chrome.storage.sync.get(
             "gifsterOptions",
-            (opts) =>  {
-                chrome.tabs.query({active: true}, function (tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
-                });
+            (opts) => {
+                const gifsterOptions = opts.gifsterOptions;
 
-                setTimeout(() => {
-                    const gifsterOptions = opts.gifsterOptions;
+                const options = {
+                    type: "gif",
+                    width: gifsterOptions.width,
+                    height: gifsterOptions.height,
+                    quality: 21 - gifsterOptions.quality,
+                    frameRate: gifsterOptions.fps * 10,
+                    rafDisabled: this.rafDisabled
+                };
 
-                    const options = {
-                        type: "gif",
-                        width: gifsterOptions.width,
-                        height: gifsterOptions.height,
-                        quality: 21 - gifsterOptions.quality,
-                        frameRate: gifsterOptions.fps * 10,
-                        rafDisabled: this.rafDisabled
-                    };
-
-                    this.rrtc = RecordRTC(stream, options);
-                    this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                    this.rrtc.startRecording();
-                }, 3300);
+                this.rrtc = RecordRTC(stream, options);
+                this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
+                this.rrtc.startRecording();
             }
         )
     }
@@ -78,13 +75,13 @@ export default class WebcamController {
     error(e) {
         console.error("[WebcamController.error] ", e);
 
-        chrome.runtime.sendMessage({error: {name:  e.name}});
+        chrome.runtime.sendMessage({error: {name: e.name}});
     }
 
     stop() {
         const preview = document.getElementById(this.previewSelector);
 
-        if(preview){
+        if (preview) {
             preview.className = "gifster-webcam-preview preview-fade-out";
         }
 

@@ -8,21 +8,21 @@ class BackgroundController {
     }
 
     screenHandlerBG() {
-        const controller = new ScreenController(true);
+        chrome.tabs.query({active: true}, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
 
-        controller.start();
+            setTimeout(() => new ScreenController(true).start(), 3300);
+        });
+    }
+
+    webcamHandlerBG() {
+        new WebcamController(true).start();
     }
 
     webcamHandler() {
         chrome.tabs.query({active: true}, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, {webcam: true});
         });
-    }
-
-    webcamHandlerBG() {
-        const controller = new WebcamController(true);
-
-        controller.start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -38,12 +38,8 @@ class BackgroundController {
             this.webcamHandler();
             sendResponse({data: "webcam from runtime message started"});
         }
-        if (request.webcamBG) {
-            this.webcamHandlerBG();
-            sendResponse({data: "webcamBG from runtime message started"});
-        }
         if (request.screen) {
-            this.screenHandler();
+            this.screenHandlerBG();
             sendResponse({data: "screen from runtime message started"});
         }
         if(request.error){

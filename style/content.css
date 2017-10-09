@@ -25,6 +25,7 @@
     bottom: 50px;
     box-shadow: 10px 10px 30px 0px rgba(0, 0, 0, 0.75);
     opacity: 0;
+    z-index: 2147483647;
 }
 .preview-fade-in{
     animation: fadein 0.8s;

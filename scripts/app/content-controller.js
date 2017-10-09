@@ -2,52 +2,49 @@ import WebcamController from "./webcam-controller";
 
 class ContentController {
     start () {
+        this.timer = null;
         chrome.runtime.sendMessage({contentInit: true});
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
     }
 
     messageListener(request, sender, sendResponse) {
         if(request.webcam){
-            const controller = new WebcamController();
+            this.renderTimer();
 
-            controller.start();
+            setTimeout(() => new WebcamController(true).start(), 3300);
         }
         if(request.renderTimer){
             this.renderTimer();
         }
-        if(request.killTimer){
-            this.killTimer();
-        }
     }
 
     renderTimer () {
-        const timer = document.createElement("div");
+        if(!this.timer){
+            this.timer = document.createElement("div");
 
-        timer.id = "gifster-timer";
-        timer.className = "gifster-timer";
+            this.timer.id = "gifster-timer";
+            this.timer.className = "gifster-timer";
 
-        timer.innerHTML = 3;
-        let counter = 0;
+            this.timer.innerHTML = 3;
+            let counter = 0;
 
-        document.querySelector("body").appendChild(timer);
+            document.querySelector("body").appendChild(this.timer);
 
-        const interval = setInterval(() => {
-            counter++;
+            const interval = setInterval(() => {
+                counter++;
 
-            switch (counter){
-                case 3:
-                    timer.innerHTML = "Recording";
-                    timer.style.left = `calc(50% - ${timer.offsetWidth})`;
-                    break;
-                case 4:
-                    clearInterval(interval);
-                    timer.remove();
-                    break;
-                default:
-                    timer.innerHTML--;
-                    break;
-            }
-        }, 1000)
+                switch (counter){
+                    case 3:
+                        clearInterval(interval);
+                        this.timer.remove();
+                        this.timer = null;
+                        break;
+                    default:
+                        this.timer.innerHTML--;
+                        break;
+                }
+            }, 1000)
+        }
     }
 }
 

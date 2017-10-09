@@ -4,6 +4,9 @@ import RecordRTC from "./../vendor/record-rtc";
 window.LZWEncoder = encoders.LZWEncoder;
 window.GIFEncoder = encoders.GIFEncoder;
 
+/**
+ * Can be called from background script only
+ */
 export default class ScreenController {
     constructor(rafDisabled) {
         this.rrtc = null;
@@ -41,31 +44,26 @@ export default class ScreenController {
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) => {
-                chrome.tabs.query({active: true}, function (tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
-                });
+                const gifsterOptions = opts.gifsterOptions;
 
-                setTimeout(() => {
-                    const gifsterOptions = opts.gifsterOptions;
+                const options = {
+                    type: "gif",
+                    height: gifsterOptions.height,
+                    width: gifsterOptions.width,
+                    quality: 21 - gifsterOptions.quality,
+                    frameRate: gifsterOptions.frameRate * 10,
+                    rafDisabled: this.rafDisabled
+                };
 
-                    const options = {
-                        type: "gif",
-                        height: gifsterOptions.height,
-                        width: gifsterOptions.width,
-                        quality: 21 - gifsterOptions.quality,
-                        frameRate: gifsterOptions.frameRate * 10,
-                        rafDisabled: this.rafDisabled
-                    };
-
-                    this.rrtc = RecordRTC(stream, options);
-                    this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                    this.rrtc.startRecording();
-                }, 3300);
+                this.rrtc = RecordRTC(stream, options);
+                this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
+                this.rrtc.startRecording();
             }
         );
     }
 
     stop() {
+        chrome.runtime.sendMessage({stop: true});
         this.activeStream.getVideoTracks().forEach(track => track.stop());
         this.activeStream = null;
 
