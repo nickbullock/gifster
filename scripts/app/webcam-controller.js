@@ -51,20 +51,26 @@ export default class WebcamController {
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) =>  {
-                const gifsterOptions = opts.gifsterOptions;
+                chrome.tabs.query({active: true}, function (tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
+                });
 
-                const options = {
-                    type: "gif",
-                    width: gifsterOptions.width,
-                    height: gifsterOptions.height,
-                    quality: 21 - gifsterOptions.quality,
-                    frameRate: gifsterOptions.fps * 10,
-                    rafDisabled: this.rafDisabled
-                };
+                setTimeout(() => {
+                    const gifsterOptions = opts.gifsterOptions;
 
-                this.rrtc = RecordRTC(stream, options);
-                this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                this.rrtc.startRecording();
+                    const options = {
+                        type: "gif",
+                        width: gifsterOptions.width,
+                        height: gifsterOptions.height,
+                        quality: 21 - gifsterOptions.quality,
+                        frameRate: gifsterOptions.fps * 10,
+                        rafDisabled: this.rafDisabled
+                    };
+
+                    this.rrtc = RecordRTC(stream, options);
+                    this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
+                    this.rrtc.startRecording();
+                }, 3300);
             }
         )
     }

@@ -60,7 +60,7 @@ export default class ScreenController {
                     this.rrtc = RecordRTC(stream, options);
                     this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
                     this.rrtc.startRecording();
-                }, 3000);
+                }, 3300);
             }
         );
     }
