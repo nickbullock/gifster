@@ -42,23 +42,25 @@ export default class ScreenController {
             "gifsterOptions",
             (opts) => {
                 chrome.tabs.query({active: true}, function (tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, {timer: true});
+                    chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
                 });
 
-                const gifsterOptions = opts.gifsterOptions;
+                setTimeout(() => {
+                    const gifsterOptions = opts.gifsterOptions;
 
-                const options = {
-                    type: "gif",
-                    height: gifsterOptions.height,
-                    width: gifsterOptions.width,
-                    quality: 21 - gifsterOptions.quality,
-                    frameRate: gifsterOptions.frameRate * 10,
-                    rafDisabled: this.rafDisabled
-                };
+                    const options = {
+                        type: "gif",
+                        height: gifsterOptions.height,
+                        width: gifsterOptions.width,
+                        quality: 21 - gifsterOptions.quality,
+                        frameRate: gifsterOptions.frameRate * 10,
+                        rafDisabled: this.rafDisabled
+                    };
 
-                this.rrtc = RecordRTC(stream, options);
-                this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                this.rrtc.startRecording();
+                    this.rrtc = RecordRTC(stream, options);
+                    this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
+                    this.rrtc.startRecording();
+                }, 3000);
             }
         );
     }

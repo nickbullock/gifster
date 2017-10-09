@@ -12,8 +12,11 @@ class ContentController {
 
             controller.start();
         }
-        if(request.timer){
+        if(request.renderTimer){
             this.renderTimer();
+        }
+        if(request.killTimer){
+            this.killTimer();
         }
     }
 
@@ -34,6 +37,7 @@ class ContentController {
             switch (counter){
                 case 3:
                     timer.innerHTML = "Recording";
+                    timer.style.left = `calc(50% - ${timer.offsetWidth})`;
                     break;
                 case 4:
                     clearInterval(interval);
