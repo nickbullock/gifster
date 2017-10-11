@@ -1,8 +1,3 @@
-// import encoders from "./../vendor/encoders";
-// import RecordRTC from "./../vendor/record-rtc";
-//
-// window.LZWEncoder = encoders.LZWEncoder;
-// window.GIFEncoder = encoders.GIFEncoder;
 import GIF from "gif";
 
 /**
@@ -17,7 +12,7 @@ export default class ScreenController {
             video: true,
             videoConstraints: {
                 mandatory: {
-                    chromeMediaSource: 'tab',
+                    chromeMediaSource: "tab",
                     maxWidth: 1920,
                     maxHeight: 1080,
                     maxFrameRate: 60,
@@ -43,103 +38,112 @@ export default class ScreenController {
     process(stream) {
         this.activeStream = stream;
 
-        console.log("stream type is",stream.constructor.name);
-
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) => {
+                console.log("[ScreenController.process] start capturing", opts.gifsterOptions);
+
                 const gifsterOptions = opts.gifsterOptions;
-                let canvas = document.createElement('canvas');
-                let context = canvas.getContext('2d');
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                const video = document.createElement("video");
+                const gif = new GIF({
+                    workers: 50,
+                    quality: gifsterOptions.quality,
+                    width: gifsterOptions.width,
+                    height: gifsterOptions.height
+                });
 
-                if (stream instanceof CanvasRenderingContext2D) {
-                    context = stream;
-                    canvas = context.canvas;
-                } else if (stream instanceof HTMLCanvasElement) {
-                    context = stream.getContext('2d');
-                    canvas = stream;
-                }
-
-                gifsterOptions.workers = 20;
-
-                const video = document.createElement('video');
                 video.muted = true;
                 video.autoplay = true;
                 video.width = gifsterOptions.width;
                 video.height = gifsterOptions.height;
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    this.isLoadedMetaData = true;
+                };
+
                 canvas.width = gifsterOptions.width;
                 canvas.height = gifsterOptions.height;
 
-                video.onloadedmetadata = function() {
-
-
-                    // gif.render();
-                };
-
-                video.srcObject = stream;
-
-                // if (typeof video.srcObject !== 'undefined') {
-                //     video.srcObject = stream;
-                // }
-                // else {
-                //     video.src = URL.createObjectURL(stream);
-                // }
-                this.isLoadedMetaData = true;
-                let timer = null;
-                const gif = new GIF(gifsterOptions);
-
-                console.log("RECORDING STARTED")
-
-                gif.on('progress', (p) => console.log("progress is ", p*100));
-
-                gif.on('finished', function(blob) {
-                    console.log("GIF FINISHED", blob)
-                    window.open(URL.createObjectURL(blob));
+                gif.on("start", () => {
+                    console.time("render");
                 });
 
-                video.addEventListener('play', function() {
-                    console.log("VIDEO PLAY")
-                    timer = setInterval(() => {
-                        console.log("DRAW FRAME")
+                gif.on("progress", (p) => {
+                    console.log(`[ScreenController.process] progress ${Math.round(p * 100)}%`);
+                    this.createRenderProgressNotification(Math.round(p * 100));
+                });
+
+                gif.on("finished", (blob) => {
+                    console.timeEnd("render");
+                    this.stop(blob);
+                });
+
+                video.addEventListener("play", function() {
+                    const interval = setInterval(() => {
+                        console.log("draw frame");
+
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
                         gif.addFrame(canvas, {copy: true, delay: 100});
                     }, 100);
 
                     setTimeout(() => {
-                        console.log("VIDEO START")
-                        clearInterval(timer);
+                        clearInterval(interval);
                         gif.render();
-                    },5000)
+                    }, gifsterOptions.duration * 1000)
                 });
 
                 video.play();
-
-                // const options = {
-                //     type: "gif",
-                //     height: gifsterOptions.height,
-                //     width: gifsterOptions.width,
-                //     quality: 21 - gifsterOptions.quality,
-                //     frameRate: gifsterOptions.frameRate * 10,
-                //     rafDisabled: this.rafDisabled
-                // };
-                //
-                // this.rrtc = RecordRTC(stream, options);
-                // this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                // this.rrtc.startRecording();
             }
         );
     }
 
-    stop() {
+    stop(blob) {
+        const url = window.URL.createObjectURL(blob);
+
         this.activeStream.getVideoTracks().forEach(track => track.stop());
         this.activeStream = null;
-
-        this.download();
+        this.download(url);
     }
 
-    download() {
+    download(url) {
         const filename = `screen-${Date.now()}`;
+        const a = document.createElement("a");
 
-        // this.rrtc.save(filename);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
+
+    createRenderProgressNotification(progress) {
+        const notificationId = "render";
+
+        if(progress === 100) {
+            chrome.notifications.clear(notificationId);
+
+            return;
+        }
+
+        if (progress === 0) {
+            chrome.notifications.create(
+                notificationId,
+                {
+                    type: "progress",
+                    iconUrl: "icon128.png",
+                    title: "Rendering... ",
+                    message: "Gifster creates your gif :)",
+                    progress: 0
+                }
+            )
+        }
+        else {
+            chrome.notifications.update(
+                notificationId,
+                {progress}
+            );
+        }
+    }
+
 }
