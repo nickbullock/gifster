@@ -4,10 +4,10 @@ import GIF from "gif";
  * Can be called from background script only
  */
 export default class ScreenController {
-    constructor(rafDisabled) {
-        this.rrtc = null;
+    constructor() {
+        console.log("[ScreenController] constructor init");
+
         this.activeStream = null;
-        this.rafDisabled = rafDisabled;
         this.mediaOptions = {
             video: true,
             videoConstraints: {
@@ -36,6 +36,8 @@ export default class ScreenController {
     }
 
     process(stream) {
+        const self = this;
+
         this.activeStream = stream;
 
         chrome.storage.sync.get(
@@ -48,6 +50,7 @@ export default class ScreenController {
                 const context = canvas.getContext("2d");
                 const video = document.createElement("video");
                 const gif = new GIF({
+                    workerScript: chrome.extension.getURL("gif.worker.js"),
                     workers: 50,
                     quality: gifsterOptions.quality,
                     width: gifsterOptions.width,
@@ -60,7 +63,9 @@ export default class ScreenController {
                 video.height = gifsterOptions.height;
                 video.srcObject = stream;
                 video.onloadedmetadata = () => {
-                    this.isLoadedMetaData = true;
+                    setTimeout(() => {
+                        self.isLoadedMetaData = true;
+                    }, 1000);
                 };
 
                 canvas.width = gifsterOptions.width;
@@ -72,7 +77,12 @@ export default class ScreenController {
 
                 gif.on("progress", (p) => {
                     console.log(`[ScreenController.process] progress ${Math.round(p * 100)}%`);
-                    this.createRenderProgressNotification(Math.round(p * 100));
+                    if(!chrome.notifications){
+                        chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p*100)});
+                    }
+                    else{
+                        self.createRenderingProgressNotification(Math.round(p*100));
+                    }
                 });
 
                 gif.on("finished", (blob) => {
@@ -82,8 +92,9 @@ export default class ScreenController {
 
                 video.addEventListener("play", function() {
                     const interval = setInterval(() => {
-                        console.log("draw frame");
-
+                        if(!self.isLoadedMetaData){
+                            return;
+                        }
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
                         gif.addFrame(canvas, {copy: true, delay: 100});
                     }, 100);
@@ -117,7 +128,8 @@ export default class ScreenController {
         window.URL.revokeObjectURL(url);
     }
 
-    createRenderProgressNotification(progress) {
+
+    createRenderingProgressNotification(progress) {
         const notificationId = "render";
 
         if(progress === 100) {
@@ -145,5 +157,4 @@ export default class ScreenController {
             );
         }
     }
-
 }

@@ -12,7 +12,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["content.js"],
+      "js": ["gif.worker.js","content.js"],
       "css": ["content.css"],
       "run_at": "document_end"
     }
@@ -42,11 +42,14 @@
     }
   },
   "permissions": [
-    "*://*/*",
+    "<all_urls>",
     "activeTab",
     "tabCapture",
     "tabs",
     "storage",
     "notifications"
+  ],
+  "web_accessible_resources": [
+    "gif.worker.js"
   ]
 }
