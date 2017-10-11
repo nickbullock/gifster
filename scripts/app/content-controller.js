@@ -1,6 +1,9 @@
 import WebcamController from "./webcam-controller";
 
 class ContentController {
+    constructor () {
+        console.log("[ContentController] constructor init");
+    }
     start () {
         this.timer = null;
         chrome.runtime.sendMessage({contentInit: true});
@@ -8,6 +11,8 @@ class ContentController {
     }
 
     messageListener(request, sender, sendResponse) {
+        console.log("[ContentController.messageLister] incoming message", request);
+
         if(request.webcam){
             this.renderTimer();
 

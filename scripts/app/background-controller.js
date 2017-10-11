@@ -8,15 +8,15 @@ class BackgroundController {
     }
 
     screenHandlerBG() {
-        chrome.tabs.query({active: true}, function (tabs) {
+        chrome.tabs.query({active: true}, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
 
-            setTimeout(() => new ScreenController(true).start(), 3300);
+            setTimeout(() => new ScreenController().start(), 3300);
         });
     }
 
     webcamHandlerBG() {
-        new WebcamController(true).start();
+        new WebcamController().start();
     }
 
     webcamHandler() {
@@ -42,7 +42,37 @@ class BackgroundController {
             this.screenHandlerBG();
             sendResponse({data: "screen from runtime message started"});
         }
-        if(request.error){
+        if(request.renderingProgressNotification){
+            const notificationId = "render";
+            const progress = request.progress;
+
+            if(progress === 100) {
+                chrome.notifications.clear(notificationId);
+
+                return;
+            }
+
+            if (progress === 0) {
+                chrome.notifications.create(
+                    notificationId,
+                    {
+                        type: "progress",
+                        iconUrl: "icon128.png",
+                        title: "Rendering... ",
+                        message: "Gifster creates your gif :)",
+                        progress: 0
+                    }
+                )
+            }
+            else {
+                chrome.notifications.update(
+                    notificationId,
+                    {progress}
+                );
+            }
+        }
+
+        if (request.error){
             switch (request.error.name) {
                 case "DevicesNotFoundError":
                     chrome.notifications.create({
@@ -57,7 +87,7 @@ class BackgroundController {
                         type: "basic",
                         iconUrl: chrome.extension.getURL("icon128.png"),
                         title: "Can't create preview",
-                        message: "Gifster can create preview on secure sites only. But gif will be recorded :)"
+                        message: "Gifster can't create preview on this site - it's not secure enough (secure sites urls start with 'https'). But gif will be recorded :)"
                     });
 
                     this.webcamHandlerBG();
@@ -76,7 +106,7 @@ class BackgroundController {
     }
 
     commandListener(command) {
-        console.log("[commandListener]: command is", command);
+        console.log("[BackgroundController.commandListener]: incoming command ", command);
 
         switch (command) {
             case "webcam":

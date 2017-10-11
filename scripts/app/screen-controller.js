@@ -1,22 +1,18 @@
-import encoders from "./../vendor/encoders";
-import RecordRTC from "./../vendor/record-rtc";
-
-window.LZWEncoder = encoders.LZWEncoder;
-window.GIFEncoder = encoders.GIFEncoder;
+import GIF from "gif";
 
 /**
  * Can be called from background script only
  */
 export default class ScreenController {
-    constructor(rafDisabled) {
-        this.rrtc = null;
+    constructor() {
+        console.log("[ScreenController] constructor init");
+
         this.activeStream = null;
-        this.rafDisabled = rafDisabled;
         this.mediaOptions = {
             video: true,
             videoConstraints: {
                 mandatory: {
-                    chromeMediaSource: 'tab',
+                    chromeMediaSource: "tab",
                     maxWidth: 1920,
                     maxHeight: 1080,
                     maxFrameRate: 60,
@@ -27,6 +23,7 @@ export default class ScreenController {
                 }
             }
         };
+        this.isLoadedMetaData = false;
 
         this.start = this.start.bind(this);
         this.process = this.process.bind(this);
@@ -39,39 +36,125 @@ export default class ScreenController {
     }
 
     process(stream) {
+        const self = this;
+
         this.activeStream = stream;
 
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) => {
-                const gifsterOptions = opts.gifsterOptions;
+                console.log("[ScreenController.process] start capturing", opts.gifsterOptions);
 
-                const options = {
-                    type: "gif",
-                    height: gifsterOptions.height,
+                const gifsterOptions = opts.gifsterOptions;
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                const video = document.createElement("video");
+                const gif = new GIF({
+                    workerScript: chrome.extension.getURL("gif.worker.js"),
+                    workers: 50,
+                    quality: gifsterOptions.quality,
                     width: gifsterOptions.width,
-                    quality: 21 - gifsterOptions.quality,
-                    frameRate: gifsterOptions.frameRate * 10,
-                    rafDisabled: this.rafDisabled
+                    height: gifsterOptions.height
+                });
+
+                video.muted = true;
+                video.autoplay = true;
+                video.width = gifsterOptions.width;
+                video.height = gifsterOptions.height;
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    setTimeout(() => {
+                        self.isLoadedMetaData = true;
+                    }, 1000);
                 };
 
-                this.rrtc = RecordRTC(stream, options);
-                this.rrtc.setRecordingDuration(gifsterOptions.duration * 1000, this.stop);
-                this.rrtc.startRecording();
+                canvas.width = gifsterOptions.width;
+                canvas.height = gifsterOptions.height;
+
+                gif.on("start", () => {
+                    console.time("render");
+                });
+
+                gif.on("progress", (p) => {
+                    console.log(`[ScreenController.process] progress ${Math.round(p * 100)}%`);
+                    if(!chrome.notifications){
+                        chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p*100)});
+                    }
+                    else{
+                        self.createRenderingProgressNotification(Math.round(p*100));
+                    }
+                });
+
+                gif.on("finished", (blob) => {
+                    console.timeEnd("render");
+                    this.stop(blob);
+                });
+
+                video.addEventListener("play", function() {
+                    const interval = setInterval(() => {
+                        if(!self.isLoadedMetaData){
+                            return;
+                        }
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        gif.addFrame(canvas, {copy: true, delay: 100});
+                    }, 100);
+
+                    setTimeout(() => {
+                        clearInterval(interval);
+                        gif.render();
+                    }, gifsterOptions.duration * 1000)
+                });
+
+                video.play();
             }
         );
     }
 
-    stop() {
+    stop(blob) {
+        const url = window.URL.createObjectURL(blob);
+
         this.activeStream.getVideoTracks().forEach(track => track.stop());
         this.activeStream = null;
-
-        this.download();
+        this.download(url);
     }
 
-    download() {
+    download(url) {
         const filename = `screen-${Date.now()}`;
+        const a = document.createElement("a");
 
-        this.rrtc.save(filename);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+
+    createRenderingProgressNotification(progress) {
+        const notificationId = "render";
+
+        if(progress === 100) {
+            chrome.notifications.clear(notificationId);
+
+            return;
+        }
+
+        if (progress === 0) {
+            chrome.notifications.create(
+                notificationId,
+                {
+                    type: "progress",
+                    iconUrl: "icon128.png",
+                    title: "Rendering... ",
+                    message: "Gifster creates your gif :)",
+                    progress: 0
+                }
+            )
+        }
+        else {
+            chrome.notifications.update(
+                notificationId,
+                {progress}
+            );
+        }
     }
 }

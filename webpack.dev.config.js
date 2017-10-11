@@ -14,7 +14,7 @@ const optionsHtmlWebpackPluginOptions = {
     chunks: ["options"]
 };
 const copyWebpackPluginOptions = [
-    {from: "scripts/vendor/encoders.js", to: "encoders.js"},
+    {from: "node_modules/gif.js/dist/gif.worker.js", to: "gif.worker.js"},
     {from: "style/content.css", to: "content.css"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
@@ -68,7 +68,10 @@ module.exports = {
     resolve: {
         modules: [
             "node_modules"
-        ]
+        ],
+        alias: {
+            gif: "gif.js/dist/gif.js"
+        }
     },
     plugins: [
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
