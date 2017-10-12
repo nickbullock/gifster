@@ -41,7 +41,7 @@ class ContentController {
                 switch (counter){
                     case 3:
                         clearInterval(interval);
-                        this.timer.remove();
+                        // this.timer.remove();
                         this.timer = null;
                         break;
                     default:
@@ -56,3 +56,5 @@ class ContentController {
 const controller = new ContentController();
 
 controller.start();
+
+controller.renderTimer()
