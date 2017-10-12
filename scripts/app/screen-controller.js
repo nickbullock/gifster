@@ -51,7 +51,7 @@ export default class ScreenController {
                 const video = document.createElement("video");
                 const gif = new GIF({
                     workerScript: chrome.extension.getURL("gif.worker.js"),
-                    workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.5*(gifsterOptions.duration * gifsterOptions.fps)),
+                    workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                     quality: 21 - gifsterOptions.quality,
                     width: gifsterOptions.width,
                     height: gifsterOptions.height
