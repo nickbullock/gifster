@@ -61,8 +61,8 @@ export default class WebcamController {
                     const video = document.createElement("video");
 
                     const gif = new GIF({
-                        workerScript: (code ? URL.createObjectURL(new Blob([code], {type: 'text/javascript'})) : chrome.extension.getURL("gif.worker.js")),
-                        workers: 50,
+                        workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("gif.worker.js")),
+                        workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                         quality: gifsterOptions.quality,
                         width: gifsterOptions.width,
                         height: gifsterOptions.height
@@ -108,13 +108,13 @@ export default class WebcamController {
                                 return;
                             }
                             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                            gif.addFrame(canvas, {copy: true, delay: 100});
-                        }, 100);
+                            gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
+                        }, (1000 / gifsterOptions.fps));
 
                         setTimeout(() => {
                             clearInterval(interval);
                             gif.render();
-                        }, gifsterOptions.duration * 1000)
+                        }, (gifsterOptions.duration * 1000) + 1000)
                     });
 
                     video.play();
@@ -123,7 +123,7 @@ export default class WebcamController {
                 if(self.fromContent){
                     const xhr = new XMLHttpRequest();
 
-                    xhr.open('GET', chrome.extension.getURL("gif.worker.js"), true);
+                    xhr.open("GET", chrome.extension.getURL("gif.worker.js"), true);
                     xhr.send();
 
                     xhr.onreadystatechange = (data) => {

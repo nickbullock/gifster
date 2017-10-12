@@ -5,10 +5,12 @@ class OptionsController {
     constructor () {
         this.options = {};
         this.defaultOptions = {
-            duration: "5",
-            fps: "15",
-            resolution: "2",
-            quality: "10"
+            duration: 5,
+            fps: 10,
+            resolution: 2,
+            quality: 10,
+            width: 858,
+            height: 480
         };
 
         this.durationSelector = "input#duration";
@@ -64,10 +66,11 @@ class OptionsController {
     initValues(optionsInit, isFirstInit) {
         if(isFirstInit){
             chrome.storage.sync.set({gifsterOptions: this.defaultOptions});
+
             optionsInit = this.defaultOptions;
         }
 
-        console.log("[OptionsController.init] init options", optionsInit);
+        console.log("[OptionsController.initValues] options", optionsInit, isFirstInit);
 
         Object.assign(this.options, optionsInit);
 
@@ -79,6 +82,7 @@ class OptionsController {
 
     saveValues () {
         const optionsInit = {};
+
         Object.assign(optionsInit, this.options);
         switch(optionsInit.resolution.toString()) {
             case "1":

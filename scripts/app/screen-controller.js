@@ -51,7 +51,7 @@ export default class ScreenController {
                 const video = document.createElement("video");
                 const gif = new GIF({
                     workerScript: chrome.extension.getURL("gif.worker.js"),
-                    workers: 50,
+                    workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                     quality: gifsterOptions.quality,
                     width: gifsterOptions.width,
                     height: gifsterOptions.height
@@ -96,13 +96,13 @@ export default class ScreenController {
                             return;
                         }
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        gif.addFrame(canvas, {copy: true, delay: 100});
-                    }, 100);
+                        gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
+                    }, (1000 / gifsterOptions.fps));
 
                     setTimeout(() => {
                         clearInterval(interval);
                         gif.render();
-                    }, gifsterOptions.duration * 1000)
+                    }, (gifsterOptions.duration * 1000) + 1000)
                 });
 
                 video.play();
