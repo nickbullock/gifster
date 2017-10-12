@@ -2,11 +2,13 @@ import "./../../style/popup.css";
 import "./../../static/webcam.png";
 import "./../../static/screen.png";
 import "./../../static/settings.png";
+import "./../../static/area.png";
 
 class PopupController {
     constructor () {
         this.screenSelector = ".list__item_screen";
         this.webcamSelector = ".list__item_webcam";
+        this.areaSelector = ".list__item_area";
         this.optionsSelector = ".list__item_options";
 
         this.start = this.start.bind(this);
@@ -23,6 +25,7 @@ class PopupController {
     registerButtonCallbackList() {
         document.querySelector(this.screenSelector).addEventListener("click", this.screenHandler);
         document.querySelector(this.webcamSelector).addEventListener("click", this.webcamHandler);
+        document.querySelector(this.areaSelector).addEventListener("click", this.areaHandler);
         document.querySelector(this.optionsSelector).addEventListener("click", this.optionsHandler);
     }
 
@@ -35,6 +38,13 @@ class PopupController {
 
     webcamHandler() {
         chrome.runtime.sendMessage({webcam: true}, function (response) {
+            console.log(response.data);
+        });
+        window.close();
+    }
+
+    areaHandler() {
+        chrome.runtime.sendMessage({area: true}, function (response) {
             console.log(response.data);
         });
         window.close();

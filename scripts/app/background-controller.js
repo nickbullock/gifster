@@ -1,5 +1,6 @@
 import ScreenController from "./screen-controller";
 import WebcamController from "./webcam-controller";
+import AreaController from "./area-controller";
 
 class BackgroundController {
     start() {
@@ -25,6 +26,14 @@ class BackgroundController {
         });
     }
 
+    areaHandlerBG() {
+        chrome.tabs.query({active: true}, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true});
+
+            // new AreaController().start();
+        });
+    }
+
     messageListener(request, sender, sendResponse) {
         console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension", request);
 
@@ -42,11 +51,14 @@ class BackgroundController {
             this.screenHandlerBG();
             sendResponse({data: "screen from runtime message started"});
         }
-        if(request.renderingProgressNotification){
+        if (request.area) {
+            this.areaHandlerBG();
+        }
+        if (request.renderingProgressNotification) {
             const notificationId = "render";
             const progress = request.progress;
 
-            if(progress === 100) {
+            if (progress === 100) {
                 chrome.notifications.clear(notificationId);
 
                 return;
@@ -72,7 +84,7 @@ class BackgroundController {
             }
         }
 
-        if (request.error){
+        if (request.error) {
             switch (request.error.name) {
                 case "DevicesNotFoundError":
                     chrome.notifications.create({
@@ -114,6 +126,9 @@ class BackgroundController {
                 break;
             case "screen":
                 this.screenHandlerBG();
+                break;
+            case "area":
+                this.areaHandlerBG();
                 break;
             default:
                 break;

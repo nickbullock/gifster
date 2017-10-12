@@ -1,10 +1,11 @@
 import WebcamController from "./webcam-controller";
 
 class ContentController {
-    constructor () {
+    constructor() {
         console.log("[ContentController] constructor init");
     }
-    start () {
+
+    start() {
         this.timer = null;
         chrome.runtime.sendMessage({contentInit: true});
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
@@ -13,18 +14,41 @@ class ContentController {
     messageListener(request, sender, sendResponse) {
         console.log("[ContentController.messageLister] incoming message", request);
 
-        if(request.webcam){
+        if (request.webcam) {
             this.renderTimer();
 
             setTimeout(() => new WebcamController(true).start(), 3300);
         }
-        if(request.renderTimer){
+        if(request.renderAreaWindow){
+            this.renderAreaWindow();
+        }
+        if (request.renderTimer) {
             this.renderTimer();
         }
     }
 
-    renderTimer () {
-        if(!this.timer){
+    renderAreaWindow() {
+        chrome.storage.sync.get(
+            "gifsterOptions",
+            (opts) => {
+                console.log("[ContentController.process] render area window", opts.gifsterOptions);
+
+                const gifsterOptions = opts.gifsterOptions;
+                const area = document.createElement("div");
+
+                area.style.width = `${gifsterOptions.width}px`;
+                area.style.height = `${gifsterOptions.height}px`;
+
+                area.className = "gifster-area";
+                area.id = "gifster-area";
+
+                document.querySelector("body").appendChild(area);
+            }
+        );
+    }
+
+    renderTimer() {
+        if (!this.timer) {
             this.timer = document.createElement("div");
 
             this.timer.id = "gifster-timer";
@@ -38,7 +62,7 @@ class ContentController {
             const interval = setInterval(() => {
                 counter++;
 
-                switch (counter){
+                switch (counter) {
                     case 3:
                         clearInterval(interval);
                         this.timer.remove();
