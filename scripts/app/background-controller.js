@@ -6,6 +6,7 @@ class BackgroundController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
         chrome.commands.onCommand.addListener(this.commandListener.bind(this));
+        chrome.runtime.onInstalled.addListener(this.installListener.bind(this));
     }
 
     screenHandlerBG() {
@@ -133,6 +134,23 @@ class BackgroundController {
             default:
                 break;
 
+        }
+    }
+
+    installListener(details) {
+        if(details.reason === "install"){
+            console.log("[BackgroundController.installListener] first install");
+
+            const defaultOptions = {
+                duration: 5,
+                fps: 10,
+                resolution: 2,
+                quality: 10,
+                width: 858,
+                height: 480
+            };
+
+            chrome.storage.sync.set({gifsterOptions: defaultOptions});
         }
     }
 }

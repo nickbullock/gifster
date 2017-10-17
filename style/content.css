@@ -60,8 +60,19 @@
 }
 
 .gifster-area {
-    border: 2px solid lightcoral;
+    border: 10px solid #850f5a;
     position: fixed;
-    left: 50%;
-    top: 50%;
+    z-index: 2147483646;
+}
+
+.gifster-inner-area {
+    width: inherit;
+    height: inherit;
+    position: relative;
+    z-index: 2147483647;
+    visibility: hidden;
+}
+
+.gifster-area-through {
+    pointer-events: none;
 }
