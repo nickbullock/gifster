@@ -1,3 +1,4 @@
+import HelperService from "./helper-service";
 import WebcamController from "./webcam-controller";
 
 class ContentController {
@@ -51,6 +52,8 @@ class ContentController {
                 innerArea.id = "gifster-inner-area";
 
                 document.querySelector("body").appendChild(area);
+
+                HelperService.makeElementDraggable(area);
 
                 const innerAreaBounds = innerArea.getBoundingClientRect();
 
