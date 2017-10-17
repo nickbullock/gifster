@@ -50,20 +50,27 @@ class ContentController {
                 innerArea.className = "gifster-inner-area";
                 innerArea.id = "gifster-inner-area";
 
-                // innerArea.onmouseenter = (ev) => {
-                //     console.log("enter", ev, ev.target.classList.contains("gifster-area-through"))
-                //     if(!ev.target.classList.contains("gifster-area-through")){
-                //         ev.target.classList.add("gifster-area-through");
-                //         ev.target.parentNode.classList.add("gifster-area-through");
-                //     }
-                // };
-                // innerArea.onmouseleave = (ev) => {
-                //     console.log("leave", ev)
-                //     ev.target.classList.remove("gifster-area-through");
-                //     ev.target.parentNode.classList.remove("gifster-area-through");
-                // };
-
                 document.querySelector("body").appendChild(area);
+
+                const innerAreaBounds = innerArea.getBoundingClientRect();
+
+                document.querySelector("body").onmousemove = (ev) => {
+                    if (ev.clientX >= innerAreaBounds.left && ev.clientX <= innerAreaBounds.right &&
+                        ev.clientY >= innerAreaBounds.top && ev.clientY <= innerAreaBounds.bottom) {
+                        if(!innerArea.classList.contains("gifster-area-through")){
+                            innerArea.classList.add("gifster-area-through");
+                            innerArea.parentNode.classList.add("gifster-area-through");
+                        }
+                    }
+                    else{
+                        if(innerArea.classList.contains("gifster-area-through")){
+                            innerArea.classList.remove("gifster-area-through");
+                            innerArea.parentNode.classList.remove("gifster-area-through");
+                        }
+                    }
+                };
+
+
             }
         );
     }

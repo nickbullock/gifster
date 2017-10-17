@@ -70,7 +70,6 @@
     height: inherit;
     position: relative;
     z-index: 2147483647;
-    visibility: hidden;
 }
 
 .gifster-area-through {
