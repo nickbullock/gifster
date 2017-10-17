@@ -1,36 +1,71 @@
 
-export default class HelperService{
-    static makeElementDraggable(element) {
-        element.onmousedown = function(e) {
+export default class HelperService {
 
-            let bounds = element.getBoundingClientRect();
-            let shiftX = e.screenX - bounds.left;
-            let shiftY = e.screenY - bounds.top;
+    static makeAreaDraggable(area, innerArea) {
 
-            moveAt(e);
+        const calculateBounds = (ev) => {
+            const innerAreaBounds = innerArea.getBoundingClientRect();
+            console.log("calculating bounds", ev.screenX, ev.screenY, innerAreaBounds)
 
-            function moveAt(e) {
-                element.style.left = e.screenX - shiftX + "px";
-                element.style.top = e.screenY - shiftY + "px";
+            if (ev.screenX >= innerAreaBounds.left && ev.screenX <= innerAreaBounds.right &&
+                ev.screenY >= innerAreaBounds.top && ev.screenY <= innerAreaBounds.bottom) {
+                if(!innerArea.pointerEvents || innerArea.pointerEvents === "auto"){
+                    console.log("NONE")
+                    area.style.pointerEvents = "none";
+                    innerArea.style.pointerEvents = "none";
+                    // innerArea.classList.add("gifster-area-through");
+                    // innerArea.parentNode.classList.add("gifster-area-through");
+                }
             }
-
-            document.onmousemove = function(e) {
-                moveAt(e);
-            };
-
-            element.onmouseup = function() {
-                document.onmousemove = null;
-                element.onmouseup = null;
-                console.log("MOUSEUP", document)
-            };
-
+            else {
+                if(!innerArea.pointerEvents || innerArea.pointerEvents === "none"){
+                    console.log("AUTO")
+                    area.style.pointerEvents = "auto";
+                    innerArea.style.pointerEvents = "auto";
+                    // innerArea.classList.remove("gifster-area-through");
+                    // innerArea.parentNode.classList.remove("gifster-area-through");
+                }
+            }
         };
 
-        element.ondragstart = function() {
+        // const moveArea = (ev) => {
+        //     const areaBounds = area.getBoundingClientRect();
+        //     const shiftX = ev.screenX - areaBounds.left;
+        //     const shiftY = ev.screenY - areaBounds.top;
+        //
+        //     area.style.left = ev.screenX - shiftX + "px";
+        //     area.style.top = ev.screenY - shiftY + "px";
+        // };
+
+        document.onmousemove = (ev) => calculateBounds(ev);
+
+        document.click = (ev) => console.log("CLICK", ev.screenX, ev.screenY);
+
+        // area.onmousedown = function(ev) {
+        //     ev.stopPropagation();
+        //
+        //     let isDragging = true;
+        //
+        //     document.onmousemove = function(ev) {
+        //         calculateBounds(ev);
+        //         moveArea(ev);
+        //     };
+        //
+        //     document.onmouseup = function() {
+        //         if(isDragging){
+        //             isDragging = false;
+        //
+        //             document.onmousemove = (ev) => calculateBounds(ev);
+        //             document.onmouseup = null;
+        //         }
+        //     };
+        //
+        //     calculateBounds(ev);
+        //     moveArea(ev);
+        // };
+
+        area.ondragstart = function() {
             return false;
         };
-
-        return element;
-
     }
 }
