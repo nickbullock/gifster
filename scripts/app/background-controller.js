@@ -27,12 +27,14 @@ class BackgroundController {
         });
     }
 
-    areaHandlerBG() {
+    renderAreaWindow() {
         chrome.tabs.query({active: true}, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true});
-
-            // new AreaController().start();
         });
+    }
+
+    areaHandlerBG(options) {
+        new AreaController(options).start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -53,7 +55,11 @@ class BackgroundController {
             sendResponse({data: "screen from runtime message started"});
         }
         if (request.area) {
-            this.areaHandlerBG();
+            this.renderAreaWindow();
+        }
+        if(request.areaStart) {
+            console.log("AREA START", request);
+            this.areaHandlerBG(request.options);
         }
         if (request.renderingProgressNotification) {
             const notificationId = "render";
@@ -129,7 +135,7 @@ class BackgroundController {
                 this.screenHandlerBG();
                 break;
             case "area":
-                this.areaHandlerBG();
+                this.renderAreaWindow();
                 break;
             default:
                 break;

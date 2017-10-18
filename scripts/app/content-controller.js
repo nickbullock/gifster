@@ -37,29 +37,32 @@ class ContentController {
                 const gifsterOptions = opts.gifsterOptions;
                 const area = document.createElement("div");
                 const innerArea = document.createElement("div");
+                const toolbar = document.createElement("div");
+                const startButton = document.createElement("button");
 
-                area.appendChild(innerArea);
-
-                area.style.width = `${gifsterOptions.width}px`;
-                area.style.height = `${gifsterOptions.height}px`;
+                innerArea.style.width = `${gifsterOptions.width}px`;
+                innerArea.style.height = `${gifsterOptions.height}px`;
                 area.style.left = `calc(50% - ${gifsterOptions.width/2}px)`;
                 area.style.top = `calc(50% - ${gifsterOptions.height/2}px)`;
 
-                area.className = "gifster-area";
-                area.id = "gifster-area";
-
                 innerArea.className = "gifster-inner-area";
                 innerArea.id = "gifster-inner-area";
+                area.className = "gifster-area";
+                area.id = "gifster-area";
+                toolbar.className = "gifster-toolbar";
+                toolbar.id = "gifster-toolbar";
+                startButton.className = "gifster-start-button";
+                startButton.id = "gifster-start-button";
+
+                startButton.onClick = () => chrome.runtime.sendMessage({areaStart: true});
+
+                area.appendChild(innerArea);
+                area.appendChild(toolbar);
+                toolbar.appendChild(startButton);
 
                 document.querySelector("body").appendChild(area);
 
                 HelperService.makeAreaDraggable(area, innerArea);
-
-                // const innerAreaBounds = innerArea.getBoundingClientRect();
-
-                // document.querySelector("body").onmousemove = (ev) => {
-                //
-                // };
             }
         );
     }

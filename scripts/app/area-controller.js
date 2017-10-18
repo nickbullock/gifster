@@ -5,13 +5,14 @@ import GIF from "gif";
  */
 export default class AreaController {
 
-    constructor() {
+    constructor(options) {
         console.log("[AreaController] constructor init");
 
         this.activeStream = null;
         this.mediaOptions = {
             video: true
         };
+        this.options = options;
 
         this.start = this.start.bind(this);
         this.process = this.process.bind(this);

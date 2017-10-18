@@ -60,7 +60,7 @@
 }
 
 .gifster-area {
-    border: 12px solid rgba(133, 15, 90, .85);
+    border: 12px solid rgb(133, 15, 90);
     border-radius: 5px;
     position: fixed;
     z-index: 2147483646;
@@ -77,7 +77,25 @@
 
 .gifster-toolbar {
     width: inherit;
-    height: 100px;
+    background: rgb(133, 15, 90);
+    height: 52px;
+}
+
+.gifster-start-button {
+    font-size: 15px;
+    width: 20%;
+    float: right;
+    color: rgba(255,255,255,.8);
+    height: 40px;
+    margin-top: 12px;
+    border: 1px solid rgba(0,0,0, .2);
+    background: rgb(133, 15, 90);
+    transition: background 500ms ease;
+}
+
+.gifster-start-button:hover {
+    transition: background 500ms ease;
+    background: rgb(100, 12, 75);
 }
 
 .gifster-area-through {
