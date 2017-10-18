@@ -60,7 +60,8 @@
 }
 
 .gifster-area {
-    border: 15px solid #850f5a;
+    border: 12px solid rgba(133, 15, 90, .85);
+    border-radius: 5px;
     position: fixed;
     z-index: 2147483646;
     cursor: move;
@@ -72,6 +73,11 @@
     height: inherit;
     position: relative;
     z-index: 2147483647;
+}
+
+.gifster-toolbar {
+    width: inherit;
+    height: 100px;
 }
 
 .gifster-area-through {
