@@ -81,7 +81,8 @@
     height: 52px;
 }
 
-.gifster-start-button {
+.gifster-start-button,
+.gifster-close-button {
     font-size: 15px;
     width: 20%;
     float: right;
@@ -93,7 +94,12 @@
     transition: background 500ms ease;
 }
 
-.gifster-start-button:hover {
+.gifster-start-button {
+    margin-right: 12px;
+}
+
+.gifster-start-button:hover,
+.gifster-close-button:hover {
     transition: background 500ms ease;
     background: rgb(100, 12, 75);
 }

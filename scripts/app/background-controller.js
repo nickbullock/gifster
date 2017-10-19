@@ -33,8 +33,8 @@ class BackgroundController {
         });
     }
 
-    areaHandlerBG(options) {
-        new AreaController(options).start();
+    areaHandlerBG(bounds) {
+        new AreaController(bounds).start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -59,7 +59,7 @@ class BackgroundController {
         }
         if(request.areaStart) {
             console.log("AREA START", request);
-            this.areaHandlerBG(request.options);
+            this.areaHandlerBG(request.bounds);
         }
         if (request.renderingProgressNotification) {
             const notificationId = "render";
@@ -71,7 +71,7 @@ class BackgroundController {
                 return;
             }
 
-            if (progress === 0) {
+            if (progress === 0 || !progress) {
                 chrome.notifications.create(
                     notificationId,
                     {

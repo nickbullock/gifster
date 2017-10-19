@@ -38,12 +38,15 @@ class ContentController {
                 const area = document.createElement("div");
                 const innerArea = document.createElement("div");
                 const toolbar = document.createElement("div");
+                const closeButton = document.createElement("button");
                 const startButton = document.createElement("button");
 
                 innerArea.style.width = `${gifsterOptions.width}px`;
                 innerArea.style.height = `${gifsterOptions.height}px`;
                 area.style.left = `calc(50% - ${gifsterOptions.width/2}px)`;
                 area.style.top = `calc(50% - ${gifsterOptions.height/2}px)`;
+                closeButton.innerHTML = "Close";
+                startButton.innerHTML = "Start";
 
                 innerArea.className = "gifster-inner-area";
                 innerArea.id = "gifster-inner-area";
@@ -51,13 +54,17 @@ class ContentController {
                 area.id = "gifster-area";
                 toolbar.className = "gifster-toolbar";
                 toolbar.id = "gifster-toolbar";
+                closeButton.className = "gifster-close-button";
+                closeButton.id = "gifster-close-button";
                 startButton.className = "gifster-start-button";
                 startButton.id = "gifster-start-button";
 
-                startButton.onClick = () => chrome.runtime.sendMessage({areaStart: true});
+                closeButton.onclick = () => area.remove();
+                startButton.onclick = () => chrome.runtime.sendMessage({areaStart: true, bounds: innerArea.getBoundingClientRect()});
 
                 area.appendChild(innerArea);
                 area.appendChild(toolbar);
+                toolbar.appendChild(closeButton);
                 toolbar.appendChild(startButton);
 
                 document.querySelector("body").appendChild(area);
