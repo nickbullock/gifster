@@ -7,6 +7,11 @@ export default class HelperService {
             const superMegaUnknownMarginVariable = 98;
             const innerAreaBounds = innerArea.getBoundingClientRect();
 
+            // console.log("---------------------")
+            // console.log(`${innerAreaBounds.left} << ${ev.screenX} << ${innerAreaBounds.right}`)
+            // console.log(`${innerAreaBounds.top} << ${ev.screenY} << ${innerAreaBounds.bottom}`)
+            // console.log("---------------------")
+
             if (ev.screenX >= innerAreaBounds.left && ev.screenX <= innerAreaBounds.right &&
                 ev.screenY >= (innerAreaBounds.top + superMegaUnknownMarginVariable)
                 && ev.screenY <= (innerAreaBounds.bottom + superMegaUnknownMarginVariable)) {

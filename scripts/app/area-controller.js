@@ -5,12 +5,20 @@ import GIF from "gif";
  */
 export default class AreaController {
 
-    constructor(bounds) {
-        console.log("[AreaController] constructor init");
+    constructor(bounds, screenHeight, screenWidth) {
+        console.log("[AreaController] constructor init", arguments);
 
         this.activeStream = null;
         this.mediaOptions = {
-            video: true
+            video: true,
+            videoConstraints: {
+                mandatory: {
+                    minHeight: screenHeight,
+                    maxHeight: screenHeight,
+                    minWidth: screenWidth,
+                    maxWidth: screenWidth
+                }
+            }
         };
         this.bounds = bounds;
 
@@ -38,12 +46,15 @@ export default class AreaController {
         chrome.storage.sync.get(
             "gifsterOptions",
             (opts) => {
-                console.log("[AreaController.process] start capturing", opts.gifsterOptions, this.bounds);
+                console.log("[AreaController.process] start capturing",
+                    opts.gifsterOptions, this.screenHeight, this.screenWidth, this.bounds, stream);
 
                 const gifsterOptions = opts.gifsterOptions;
                 const canvas = document.createElement("canvas");
                 const context = canvas.getContext("2d");
                 const video = document.createElement("video");
+                const LEFT_TOP_ACCURACY_ERROR = 1;
+                const WIDTH_HEIGHT_ACCURACY_ERROR = 2;
                 const gif = new GIF({
                     workerScript: chrome.extension.getURL("gif.worker.js"),
                     workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
@@ -54,8 +65,6 @@ export default class AreaController {
 
                 video.muted = true;
                 video.autoplay = true;
-                video.width = this.bounds.width;
-                video.height = this.bounds.height;
                 video.srcObject = stream;
                 video.onloadedmetadata = () => {
                     setTimeout(() => {
@@ -65,8 +74,6 @@ export default class AreaController {
 
                 canvas.width = this.bounds.width;
                 canvas.height = this.bounds.height;
-                canvas.style.left = this.bounds.left + "px";
-                canvas.style.left = this.bounds.top + "px";
 
                 gif.on("start", () => {
                     console.time("render");
@@ -87,12 +94,17 @@ export default class AreaController {
                     this.stop(blob);
                 });
 
-                video.addEventListener("play", function() {
+                video.addEventListener("play", () => {
                     const interval = setInterval(() => {
                         if(!self.isLoadedMetaData){
                             return;
                         }
-                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        context.drawImage(video,
+                            this.bounds.left + LEFT_TOP_ACCURACY_ERROR,
+                            this.bounds.top + LEFT_TOP_ACCURACY_ERROR,
+                            canvas.width - WIDTH_HEIGHT_ACCURACY_ERROR,
+                            canvas.height - WIDTH_HEIGHT_ACCURACY_ERROR,
+                            0, 0, canvas.width, canvas.height);
                         gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
                     }, (1000 / gifsterOptions.fps) - 5);
 

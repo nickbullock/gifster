@@ -60,7 +60,12 @@ class ContentController {
                 startButton.id = "gifster-start-button";
 
                 closeButton.onclick = () => area.remove();
-                startButton.onclick = () => chrome.runtime.sendMessage({areaStart: true, bounds: innerArea.getBoundingClientRect()});
+                startButton.onclick = () => chrome.runtime.sendMessage({
+                    areaStart: true,
+                    bounds: innerArea.getBoundingClientRect(),
+                    screenWidth: window.innerWidth,
+                    screenHeight: window.innerHeight
+                });
 
                 area.appendChild(innerArea);
                 area.appendChild(toolbar);

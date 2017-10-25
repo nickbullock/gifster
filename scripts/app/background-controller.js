@@ -33,8 +33,8 @@ class BackgroundController {
         });
     }
 
-    areaHandlerBG(bounds) {
-        new AreaController(bounds).start();
+    areaHandlerBG(bounds, screenHeight, screenWidth) {
+        new AreaController(...arguments).start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -58,8 +58,7 @@ class BackgroundController {
             this.renderAreaWindow();
         }
         if(request.areaStart) {
-            console.log("AREA START", request);
-            this.areaHandlerBG(request.bounds);
+            this.areaHandlerBG(request.bounds, request.screenHeight, request.screenWidth);
         }
         if (request.renderingProgressNotification) {
             const notificationId = "render";
