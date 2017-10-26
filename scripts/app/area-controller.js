@@ -20,6 +20,8 @@ export default class AreaController {
                 }
             }
         };
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
         this.bounds = bounds;
 
         this.start = this.start.bind(this);

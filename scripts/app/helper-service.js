@@ -4,17 +4,10 @@ export default class HelperService {
     static makeAreaDraggable(area, innerArea) {
 
         const calculateBounds = (ev) => {
-            const superMegaUnknownMarginVariable = 98;
             const innerAreaBounds = innerArea.getBoundingClientRect();
 
-            // console.log("---------------------")
-            // console.log(`${innerAreaBounds.left} << ${ev.screenX} << ${innerAreaBounds.right}`)
-            // console.log(`${innerAreaBounds.top} << ${ev.screenY} << ${innerAreaBounds.bottom}`)
-            // console.log("---------------------")
-
-            if (ev.screenX >= innerAreaBounds.left && ev.screenX <= innerAreaBounds.right &&
-                ev.screenY >= (innerAreaBounds.top + superMegaUnknownMarginVariable)
-                && ev.screenY <= (innerAreaBounds.bottom + superMegaUnknownMarginVariable)) {
+            if (ev.clientX >= innerAreaBounds.left && ev.clientX <= innerAreaBounds.right &&
+                ev.clientY >= innerAreaBounds.top && ev.clientY <= innerAreaBounds.bottom) {
                 if(!innerArea.pointerEvents || innerArea.pointerEvents === "auto"){
                     area.style.pointerEvents = "none";
                     innerArea.style.pointerEvents = "none";
@@ -29,8 +22,8 @@ export default class HelperService {
         };
 
         const moveArea = (ev, shiftX, shiftY) => {
-            area.style.left = ev.screenX - shiftX + "px";
-            area.style.top = ev.screenY - shiftY + "px";
+            area.style.left = ev.clientX - shiftX + "px";
+            area.style.top = ev.clientY - shiftY + "px";
         };
 
         document.onmousemove = (ev) => calculateBounds(ev);
@@ -40,8 +33,8 @@ export default class HelperService {
             innerArea.style.pointerEvents = "auto";
 
             const areaBounds = area.getBoundingClientRect();
-            const shiftX = ev.screenX - areaBounds.left;
-            const shiftY = ev.screenY - areaBounds.top;
+            const shiftX = ev.clientX - areaBounds.left;
+            const shiftY = ev.clientY - areaBounds.top;
             let isDragging = true;
 
             document.onmousemove = function(ev) {
