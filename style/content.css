@@ -38,7 +38,7 @@
     animation-fill-mode: forwards;
 }
 
-.gifster-timer {
+.gifster-timer, .gifster-timer-inside {
     line-height: 50px;
     width: 50px;
     text-align: center;
@@ -47,16 +47,25 @@
     box-shadow: 10px 10px 30px 0px rgba(0, 0, 0, 0.75);
     background: rgba(255, 0, 0, .3);
     color: white;
-    position: fixed;
     font-weight: 600;
     text-transform: uppercase;
     border: 2px solid indianred;
     border-radius: 50%;
     font-family: monospace;
     padding: 8px;
+    z-index: 2147483647;
+}
+
+.gifster-timer {
+    position: fixed;
     top: 50%;
     left: 50%;
-    z-index: 2147483647;
+}
+
+.gifster-timer-inside {
+    position: relative;
+    top: calc(50% - 35px);
+    left: calc(50% - 35px);
 }
 
 .gifster-area {

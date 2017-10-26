@@ -5,9 +5,12 @@ export default class HelperService {
 
         const calculateBounds = (ev) => {
             const innerAreaBounds = innerArea.getBoundingClientRect();
+            const insideInnerAreaCondition = ev.clientX >= innerAreaBounds.left
+                && ev.clientX <= innerAreaBounds.right
+                && ev.clientY >= innerAreaBounds.top
+                && ev.clientY <= innerAreaBounds.bottom;
 
-            if (ev.clientX >= innerAreaBounds.left && ev.clientX <= innerAreaBounds.right &&
-                ev.clientY >= innerAreaBounds.top && ev.clientY <= innerAreaBounds.bottom) {
+            if (insideInnerAreaCondition) {
                 area.style.pointerEvents = "none";
                 innerArea.style.pointerEvents = "none";
             }

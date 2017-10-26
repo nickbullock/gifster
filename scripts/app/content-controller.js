@@ -90,15 +90,16 @@ class ContentController {
             this.timer = document.createElement("div");
 
             this.timer.id = "gifster-timer";
-            this.timer.className = "gifster-timer";
 
             this.timer.innerHTML = 3;
             let counter = 0;
 
             if(element){
+                this.timer.className = "gifster-timer-inside";
                 element.appendChild(this.timer);
             }
             else{
+                this.timer.className = "gifster-timer";
                 document.querySelector("body").appendChild(this.timer);
             }
 
