@@ -60,12 +60,18 @@ class ContentController {
                 startButton.id = "gifster-start-button";
 
                 closeButton.onclick = () => area.remove();
-                startButton.onclick = () => chrome.runtime.sendMessage({
-                    areaStart: true,
-                    bounds: innerArea.getBoundingClientRect(),
-                    screenWidth: window.innerWidth,
-                    screenHeight: window.innerHeight
-                });
+                startButton.onclick = () => {
+                    this.renderTimer(innerArea);
+
+                    setTimeout(() => {
+                        chrome.runtime.sendMessage({
+                            areaStart: true,
+                            bounds: innerArea.getBoundingClientRect(),
+                            screenWidth: window.innerWidth,
+                            screenHeight: window.innerHeight
+                        });
+                    }, 3300)
+                };
 
                 area.appendChild(innerArea);
                 area.appendChild(toolbar);
@@ -79,7 +85,7 @@ class ContentController {
         );
     }
 
-    renderTimer() {
+    renderTimer(element) {
         if (!this.timer) {
             this.timer = document.createElement("div");
 
@@ -89,7 +95,12 @@ class ContentController {
             this.timer.innerHTML = 3;
             let counter = 0;
 
-            document.querySelector("body").appendChild(this.timer);
+            if(element){
+                element.appendChild(this.timer);
+            }
+            else{
+                document.querySelector("body").appendChild(this.timer);
+            }
 
             const interval = setInterval(() => {
                 counter++;
