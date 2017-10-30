@@ -70,7 +70,8 @@ module.exports = {
             "node_modules"
         ],
         alias: {
-            gif: "gif.js/dist/gif.js"
+            gif: "gif.js/dist/gif.js",
+            interact: "interactjs/dist/interact.js"
         }
     },
     plugins: [

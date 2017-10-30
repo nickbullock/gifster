@@ -116,3 +116,12 @@
 .gifster-area-through {
     pointer-events: none;
 }
+
+.gifster-resizer {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 20px;
+    height: 20px;
+    cursor: nesw-resize;
+}
