@@ -72,7 +72,7 @@
     border: 12px solid rgb(133, 15, 90);
     border-radius: 5px;
     position: fixed;
-    z-index: 2147483646;
+    z-index: 2147483645;
     cursor: move;
     box-shadow: 10px 10px 30px 0px rgba(0, 0, 0, 0.75);
 }
@@ -81,13 +81,16 @@
     width: inherit;
     height: inherit;
     position: relative;
-    z-index: 2147483647;
+    z-index: 2147483646;
 }
 
 .gifster-toolbar {
-    width: inherit;
+    width: 100%;
     background: rgb(133, 15, 90);
     height: 52px;
+    bottom: 0;
+    z-index: 2147483647;
+    cursor: move;
 }
 
 .gifster-start-button,
@@ -117,11 +120,15 @@
     pointer-events: none;
 }
 
-.gifster-resizer {
+.gifster-area .ui-resizable-handle{
     position: absolute;
-    top: -12px;
-    right: -12px;
-    width: 20px;
-    height: 20px;
-    cursor: nesw-resize;
+    width: 12px;
+    height: 12px;
+    background: rgba(0,0,0,.4);
+    margin-top: -12px;
+    margin-right: -12px;
+    top: 0;
+    right: 0;
+    cursor: nwse-resize;
+    z-index: 2147483647;
 }
