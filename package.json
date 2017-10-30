@@ -37,6 +37,8 @@
     "webpack": "3.6.0"
   },
   "dependencies": {
-    "gif.js": "^0.2.0"
+    "gif.js": "^0.2.0",
+    "jquery": "^3.2.1",
+    "jquery-ui-dist": "^1.12.1"
   }
 }

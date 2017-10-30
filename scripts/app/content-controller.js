@@ -1,9 +1,10 @@
-import HelperService from "./helper-service";
 import WebcamController from "./webcam-controller";
+import jQuery from "jquery";
+import jQueryUI from "jquery-ui";
 
 class ContentController {
     constructor() {
-        console.log("[ContentController] constructor init");
+        console.log("[ContentController] constructor init", jQueryUI);
     }
 
     start() {
@@ -20,7 +21,7 @@ class ContentController {
 
             setTimeout(() => new WebcamController(true).start(), 3300);
         }
-        if(request.renderAreaWindow){
+        if (request.renderAreaWindow) {
             this.renderAreaWindow();
         }
         if (request.renderTimer) {
@@ -43,21 +44,16 @@ class ContentController {
 
                 innerArea.style.width = `${gifsterOptions.width}px`;
                 innerArea.style.height = `${gifsterOptions.height}px`;
-                area.style.left = `calc(50% - ${gifsterOptions.width/2}px)`;
-                area.style.top = `calc(50% - ${gifsterOptions.height/2}px)`;
+                area.style.left = `calc(50% - ${gifsterOptions.width / 2}px)`;
+                area.style.top = `calc(50% - ${gifsterOptions.height / 2}px)`;
                 closeButton.innerHTML = "Close";
                 startButton.innerHTML = "Start";
 
                 innerArea.className = "gifster-inner-area";
-                innerArea.id = "gifster-inner-area";
                 area.className = "gifster-area";
-                area.id = "gifster-area";
                 toolbar.className = "gifster-toolbar";
-                toolbar.id = "gifster-toolbar";
                 closeButton.className = "gifster-close-button";
-                closeButton.id = "gifster-close-button";
                 startButton.className = "gifster-start-button";
-                startButton.id = "gifster-start-button";
 
                 closeButton.onclick = () => area.remove();
                 startButton.onclick = () => {
@@ -80,7 +76,30 @@ class ContentController {
 
                 document.querySelector("body").appendChild(area);
 
-                HelperService.makeAreaDraggable(area, innerArea);
+                const calculateBounds = (ev) => {
+                    const innerAreaBounds = innerArea.getBoundingClientRect();
+                    const insideInnerAreaCondition = ev.clientX >= innerAreaBounds.left
+                        && ev.clientX <= innerAreaBounds.right
+                        && ev.clientY >= innerAreaBounds.top
+                        && ev.clientY <= innerAreaBounds.bottom;
+
+                    if (insideInnerAreaCondition) {
+                        area.style.pointerEvents = "none";
+                        innerArea.style.pointerEvents = "none";
+                    }
+                    else {
+                        area.style.pointerEvents = "auto";
+                        innerArea.style.pointerEvents = "auto";
+                    }
+                };
+                document.addEventListener("mousemove", calculateBounds);
+
+                jQuery(area).draggable().resizable({minWidth: 250, minHeight: 200});
+
+                area.resize = (ev) => {
+                    innerArea.style.width = "100%";
+                    innerArea.style.height = "calc(100% - 52px)";
+                }
             }
         );
     }
@@ -89,16 +108,14 @@ class ContentController {
         if (!this.timer) {
             this.timer = document.createElement("div");
 
-            this.timer.id = "gifster-timer";
-
             this.timer.innerHTML = 3;
             let counter = 0;
 
-            if(element){
+            if (element) {
                 this.timer.className = "gifster-timer-inside";
                 element.appendChild(this.timer);
             }
-            else{
+            else {
                 this.timer.className = "gifster-timer";
                 document.querySelector("body").appendChild(this.timer);
             }
