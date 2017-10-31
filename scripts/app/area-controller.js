@@ -61,8 +61,8 @@ export default class AreaController {
                     workerScript: chrome.extension.getURL("gif.worker.js"),
                     workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                     quality: 21 - gifsterOptions.quality,
-                    width: this.bounds.width,
-                    height: this.bounds.height
+                    width: gifsterOptions.width,
+                    height: gifsterOptions.height
                 });
 
                 video.muted = true;
@@ -76,6 +76,8 @@ export default class AreaController {
 
                 canvas.width = this.bounds.width;
                 canvas.height = this.bounds.height;
+
+                context.scale(gifsterOptions.width / this.bounds.width, gifsterOptions.height / this.bounds.height);
 
                 gif.on("start", () => {
                     console.time("render");

@@ -1,6 +1,6 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const popupHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "popup.html",
@@ -44,14 +44,13 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
-                exclude: path.resolve(__dirname, "node_modules")
+                use: ["style-loader", "css-loader"],
             },
             {
                 test: /\.(ttf|otf)$/,
                 loader: "file-loader",
                 options: {
-                    name: '[name].[ext]'
+                    name: "[name].[ext]"
                 },
                 exclude: path.resolve(__dirname, "node_modules")
             },
@@ -59,9 +58,8 @@ module.exports = {
                 test: /\.(png)$/,
                 loader: "file-loader",
                 options: {
-                    name: '[name].[ext]'
-                },
-                exclude: path.resolve(__dirname, "node_modules")
+                    name: "[name].[ext]"
+                }
             }
         ]
     },
@@ -71,8 +69,7 @@ module.exports = {
         ],
         alias: {
             gif: "gif.js/dist/gif.js",
-            interact: "interactjs/dist/interact.js",
-            'jquery-ui': 'jquery-ui-dist/jquery-ui.js'
+            interact: "interactjs/dist/interact.js"
         }
     },
     plugins: [

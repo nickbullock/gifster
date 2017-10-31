@@ -1,10 +1,10 @@
 import WebcamController from "./webcam-controller";
 import jQuery from "jquery";
-import jQueryUI from "jquery-ui";
+import "jquery-ui-dist/jquery-ui.js";
 
 class ContentController {
     constructor() {
-        console.log("[ContentController] constructor init", jQueryUI);
+        console.log("[ContentController] constructor init");
     }
 
     start() {
@@ -71,8 +71,8 @@ class ContentController {
 
                 area.appendChild(innerArea);
                 area.appendChild(toolbar);
-                toolbar.appendChild(closeButton);
                 toolbar.appendChild(startButton);
+                toolbar.appendChild(closeButton);
 
                 document.querySelector("body").appendChild(area);
 
@@ -94,7 +94,14 @@ class ContentController {
                 };
                 document.addEventListener("mousemove", calculateBounds);
 
-                jQuery(area).draggable().resizable({minWidth: 250, minHeight: 200});
+                jQuery(area)
+                    .draggable()
+                    .resizable({
+                        minWidth: 250,
+                        minHeight: 200,
+                        maxWidth: 1280,
+                        maxHeight: 720
+                    });
 
                 area.resize = (ev) => {
                     innerArea.style.width = "100%";
