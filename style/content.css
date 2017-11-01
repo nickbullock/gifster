@@ -93,8 +93,7 @@
     cursor: move;
 }
 
-.gifster-start-button,
-.gifster-close-button {
+.gifster-button {
     font-size: 15px;
     width: 20%;
     float: left;
@@ -106,12 +105,11 @@
     transition: background 500ms ease;
 }
 
-.gifster-close-button {
+.gifster-button:not(:first-of-type) {
     margin-left: 12px;
 }
 
-.gifster-start-button:hover,
-.gifster-close-button:hover {
+.gifster-button:hover {
     transition: background 500ms ease;
     background: rgb(100, 12, 75);
 }

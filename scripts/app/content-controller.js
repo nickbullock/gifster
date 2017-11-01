@@ -36,24 +36,22 @@ class ContentController {
                 console.log("[ContentController.process] render area window", opts.gifsterOptions);
 
                 const gifsterOptions = opts.gifsterOptions;
-                const area = document.createElement("div");
-                const innerArea = document.createElement("div");
-                const toolbar = document.createElement("div");
-                const closeButton = document.createElement("button");
-                const startButton = document.createElement("button");
-
-                innerArea.style.width = `${gifsterOptions.width}px`;
-                innerArea.style.height = `${gifsterOptions.height}px`;
-                area.style.left = `calc(50% - ${gifsterOptions.width / 2}px)`;
-                area.style.top = `calc(50% - ${gifsterOptions.height / 2}px)`;
-                closeButton.innerHTML = "Close";
-                startButton.innerHTML = "Start";
-
-                innerArea.className = "gifster-inner-area";
-                area.className = "gifster-area";
-                toolbar.className = "gifster-toolbar";
-                closeButton.className = "gifster-close-button";
-                startButton.className = "gifster-start-button";
+                const area = new DOMParser().parseFromString(`
+                <div class="gifster-area" style="left: calc(50% - ${gifsterOptions.width / 2}px);top: calc(50% - ${gifsterOptions.height / 2}px)">
+                    <div class="gifster-inner-area" style="width: ${gifsterOptions.width}px; height: ${gifsterOptions.height}px"></div>
+                    <div class="gifster-toolbar">
+                        <button class="gifster-button gifster-button-start">Start</button>
+                        <button class="gifster-button gifster-button-startwd">Start with duration</button>
+                        <button class="gifster-button gifster-button-stop">Stop</button>
+                        <button class="gifster-button gifster-button-close">Close</button>
+                    </div>
+                </div>
+                `, "text/html").getElementsByClassName("gifster-area")[0];
+                const innerArea = area.getElementsByClassName("gifster-inner-area")[0];
+                const startButton = area.getElementsByClassName("gifster-button-start")[0];
+                const startWithDurationButton = area.getElementsByClassName("gifster-button-startwd")[0];
+                const stopButton = area.getElementsByClassName("gifster-button-stop")[0];
+                const closeButton = area.getElementsByClassName("gifster-button-close")[0];
 
                 closeButton.onclick = () => area.remove();
                 startButton.onclick = () => {
@@ -69,12 +67,7 @@ class ContentController {
                     }, 3300)
                 };
 
-                area.appendChild(innerArea);
-                area.appendChild(toolbar);
-                toolbar.appendChild(startButton);
-                toolbar.appendChild(closeButton);
-
-                document.querySelector("body").appendChild(area);
+                jQuery("body").append(area);
 
                 const calculateBounds = (ev) => {
                     const innerAreaBounds = innerArea.getBoundingClientRect();
