@@ -9,6 +9,7 @@ export default class AreaController {
         console.log("[AreaController] constructor init", arguments);
 
         this.activeStream = null;
+        this.gif = null;
         this.mediaOptions = {
             video: true,
             videoConstraints: {
@@ -57,7 +58,7 @@ export default class AreaController {
                 const video = document.createElement("video");
                 const LEFT_TOP_ACCURACY_ERROR = 1;
                 const WIDTH_HEIGHT_ACCURACY_ERROR = 2;
-                const gif = new GIF({
+                this.gif = new GIF({
                     workerScript: chrome.extension.getURL("gif.worker.js"),
                     workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                     quality: 21 - gifsterOptions.quality,
@@ -79,11 +80,11 @@ export default class AreaController {
 
                 context.scale(gifsterOptions.width / this.bounds.width, gifsterOptions.height / this.bounds.height);
 
-                gif.on("start", () => {
+                this.gif.on("start", () => {
                     console.time("render");
                 });
 
-                gif.on("progress", (p) => {
+                this.gif.on("progress", (p) => {
                     console.log(`[AreaController.process] progress ${Math.round(p * 100)}%`);
                     if(!chrome.notifications){
                         chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p*100)});
@@ -93,13 +94,13 @@ export default class AreaController {
                     }
                 });
 
-                gif.on("finished", (blob) => {
+                this.gif.on("finished", (blob) => {
                     console.timeEnd("render");
                     this.stop(blob);
                 });
 
                 video.addEventListener("play", () => {
-                    const interval = setInterval(() => {
+                    this.recordInterval = setInterval(() => {
                         if(!self.isLoadedMetaData){
                             return;
                         }
@@ -109,18 +110,27 @@ export default class AreaController {
                             canvas.width - WIDTH_HEIGHT_ACCURACY_ERROR,
                             canvas.height - WIDTH_HEIGHT_ACCURACY_ERROR,
                             0, 0, canvas.width, canvas.height);
-                        gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
+                        this.gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
                     }, (1000 / gifsterOptions.fps) - 5);
 
                     setTimeout(() => {
-                        clearInterval(interval);
-                        gif.render();
+                        if(this.gif){
+                            clearInterval(this.recordInterval);
+                            this.gif.render();
+                            this.gif = null;
+                        }
                     }, (gifsterOptions.duration * 1000) + 1000)
                 });
 
                 video.play();
             }
         );
+    }
+
+    abort() {
+        clearInterval(this.recordInterval);
+        this.gif.render();
+        this.gif = null;
     }
 
     stop(blob) {

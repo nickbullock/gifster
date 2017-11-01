@@ -13,12 +13,16 @@ class BackgroundController {
         chrome.tabs.query({active: true}, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
 
-            setTimeout(() => new ScreenController().start(), 3300);
+            setTimeout(() => {
+                this.screenController = new ScreenController();
+                this.screenController.start();
+            }, 3300);
         });
     }
 
     webcamHandlerBG() {
-        new WebcamController().start();
+        this.webcamController = new WebcamController();
+        this.webcamController.start();
     }
 
     webcamHandler() {
@@ -34,7 +38,8 @@ class BackgroundController {
     }
 
     areaHandlerBG(bounds, screenHeight, screenWidth) {
-        new AreaController(...arguments).start();
+        this.areaController = new AreaController(...arguments);
+        this.areaController.start();
     }
 
     messageListener(request, sender, sendResponse) {
@@ -59,6 +64,11 @@ class BackgroundController {
         }
         if(request.areaStart) {
             this.areaHandlerBG(request.bounds, request.screenHeight, request.screenWidth);
+        }
+        if(request.areaStop) {
+            if(this.areaController){
+                this.areaController.abort();
+            }
         }
         if (request.renderingProgressNotification) {
             const notificationId = "render";

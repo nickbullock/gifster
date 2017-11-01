@@ -41,7 +41,6 @@ class ContentController {
                     <div class="gifster-inner-area" style="width: ${gifsterOptions.width}px; height: ${gifsterOptions.height}px"></div>
                     <div class="gifster-toolbar">
                         <button class="gifster-button gifster-button-start">Start</button>
-                        <button class="gifster-button gifster-button-startwd">Start with duration</button>
                         <button class="gifster-button gifster-button-stop">Stop</button>
                         <button class="gifster-button gifster-button-close">Close</button>
                     </div>
@@ -49,15 +48,14 @@ class ContentController {
                 `, "text/html").getElementsByClassName("gifster-area")[0];
                 const innerArea = area.getElementsByClassName("gifster-inner-area")[0];
                 const startButton = area.getElementsByClassName("gifster-button-start")[0];
-                const startWithDurationButton = area.getElementsByClassName("gifster-button-startwd")[0];
                 const stopButton = area.getElementsByClassName("gifster-button-stop")[0];
                 const closeButton = area.getElementsByClassName("gifster-button-close")[0];
 
-                closeButton.onclick = () => area.remove();
-                startButton.onclick = () => {
+                const sendAreaStartMessage = () => {
                     this.renderTimer(innerArea);
 
                     setTimeout(() => {
+
                         chrome.runtime.sendMessage({
                             areaStart: true,
                             bounds: innerArea.getBoundingClientRect(),
@@ -66,8 +64,13 @@ class ContentController {
                         });
                     }, 3300)
                 };
+                const sendStopMessage = () => chrome.runtime.sendMessage({areaStop: true});
 
-                jQuery("body").append(area);
+                closeButton.onclick = () => area.remove();
+                startButton.onclick = () => sendAreaStartMessage();
+                stopButton.onclick = () => sendStopMessage();
+
+                document.getElementsByTagName("body")[0].appendChild(area);
 
                 const calculateBounds = (ev) => {
                     const innerAreaBounds = innerArea.getBoundingClientRect();
