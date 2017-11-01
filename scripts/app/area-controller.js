@@ -53,17 +53,22 @@ export default class AreaController {
                     opts.gifsterOptions, this.screenHeight, this.screenWidth, this.bounds, stream);
 
                 const gifsterOptions = opts.gifsterOptions;
+                const MAX_WIDTH = gifsterOptions.width;
+                const MAX_HEIGHT = gifsterOptions.height;
                 const canvas = document.createElement("canvas");
                 const context = canvas.getContext("2d");
                 const video = document.createElement("video");
+                const maxToBoundsWidthRatio = MAX_WIDTH / this.bounds.width;
+                const maxToBoundsHeightRatio = MAX_HEIGHT / this.bounds.height;
+                const ratio = Math.min(maxToBoundsWidthRatio, maxToBoundsHeightRatio);
                 const LEFT_TOP_ACCURACY_ERROR = 1;
                 const WIDTH_HEIGHT_ACCURACY_ERROR = 2;
                 this.gif = new GIF({
                     workerScript: chrome.extension.getURL("gif.worker.js"),
                     workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
                     quality: 21 - gifsterOptions.quality,
-                    width: gifsterOptions.width,
-                    height: gifsterOptions.height
+                    width: ratio < 1 ? this.bounds.width * ratio : this.bounds.width,
+                    height: ratio < 1 ? this.bounds.height * ratio : this.bounds.height
                 });
 
                 video.muted = true;
@@ -78,7 +83,9 @@ export default class AreaController {
                 canvas.width = this.bounds.width;
                 canvas.height = this.bounds.height;
 
-                context.scale(gifsterOptions.width / this.bounds.width, gifsterOptions.height / this.bounds.height);
+                if(ratio < 1){
+                    context.scale(ratio, ratio);
+                }
 
                 this.gif.on("start", () => {
                     console.time("render");

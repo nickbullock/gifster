@@ -45,6 +45,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"],
+                exclude: path.resolve(__dirname, "node_modules")
             },
             {
                 test: /\.(ttf|otf)$/,
@@ -59,7 +60,8 @@ module.exports = {
                 loader: "file-loader",
                 options: {
                     name: "[name].[ext]"
-                }
+                },
+                exclude: path.resolve(__dirname, "node_modules")
             }
         ]
     },
@@ -68,8 +70,7 @@ module.exports = {
             "node_modules"
         ],
         alias: {
-            gif: "gif.js/dist/gif.js",
-            interact: "interactjs/dist/interact.js"
+            gif: "gif.js/dist/gif.js"
         }
     },
     plugins: [

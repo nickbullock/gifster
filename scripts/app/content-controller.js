@@ -94,9 +94,7 @@ class ContentController {
                     .draggable()
                     .resizable({
                         minWidth: 250,
-                        minHeight: 200,
-                        maxWidth: 1280,
-                        maxHeight: 720
+                        minHeight: 50
                     });
 
                 area.resize = (ev) => {
