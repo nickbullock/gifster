@@ -1,12 +1,15 @@
 import GIF from "gif";
+import BaseController from "./base";
 
 /**
  * Can be called from background script only
  */
-export default class AreaController {
+export default class AreaController extends BaseController {
 
     constructor(bounds, screenHeight, screenWidth) {
         console.log("[AreaController] constructor init", arguments);
+
+        super();
 
         this.activeStream = null;
         this.gif = null;
@@ -28,7 +31,6 @@ export default class AreaController {
         this.start = this.start.bind(this);
         this.process = this.process.bind(this);
         this.stop = this.stop.bind(this);
-        this.download = this.download.bind(this);
     }
 
     renderAreaWindow() {
@@ -143,50 +145,11 @@ export default class AreaController {
     stop(blob) {
         const url = window.URL.createObjectURL(blob);
 
-        this.download(url);
+        this.download(url, "area");
 
         setTimeout(() => {
             this.activeStream.getVideoTracks().forEach(track => track.stop());
             this.activeStream = null;
         }, 1500);
-    }
-
-    download(url) {
-        const filename = `area-${Date.now()}`;
-        const a = document.createElement("a");
-
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    }
-
-    createRenderingProgressNotification(progress) {
-        const notificationId = "render";
-
-        if (progress === 100) {
-            chrome.notifications.clear(notificationId);
-
-            return;
-        }
-
-        if (progress === 0) {
-            chrome.notifications.create(
-                notificationId,
-                {
-                    type: "progress",
-                    iconUrl: "icon128.png",
-                    title: "Rendering... ",
-                    message: "Gifster creates your gif :)",
-                    progress: 0
-                }
-            )
-        }
-        else {
-            chrome.notifications.update(
-                notificationId,
-                {progress}
-            );
-        }
     }
 }

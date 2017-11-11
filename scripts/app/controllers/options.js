@@ -1,5 +1,5 @@
-import "./../../style/simple-grid.css";
-import "./../../style/options.css";
+import "./../../../style/simple-grid.css";
+import "./../../../style/options.css";
 
 class OptionsController {
     constructor () {
@@ -122,7 +122,7 @@ class OptionsController {
 }
 
 document.addEventListener("DOMContentLoaded",
-    function () {
+     () => {
         const controller = new OptionsController();
 
         controller.start();

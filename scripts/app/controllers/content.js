@@ -1,4 +1,4 @@
-import WebcamController from "./webcam-controller";
+import WebcamController from "./webcam";
 import jQuery from "jquery";
 import "jquery-ui-dist/jquery-ui.js";
 

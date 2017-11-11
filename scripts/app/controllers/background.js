@@ -1,6 +1,6 @@
-import ScreenController from "./screen-controller";
-import WebcamController from "./webcam-controller";
-import AreaController from "./area-controller";
+import ScreenController from "./screen";
+import WebcamController from "./webcam";
+import AreaController from "./area";
 
 class BackgroundController {
     start() {

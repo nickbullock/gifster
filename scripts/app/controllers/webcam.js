@@ -1,12 +1,15 @@
 import GIF from "gif";
+import BaseController from "./base";
 
 /**
  * Can be called from background and content scripts
  */
-export default class WebcamController {
+export default class WebcamController extends BaseController {
 
     constructor(fromContent) {
         console.log("[WebcamController] constructor init", fromContent);
+
+        super();
 
         this.activeStream = null;
         this.mediaOptions = {
@@ -20,7 +23,6 @@ export default class WebcamController {
         this.process = this.process.bind(this);
         this.error = this.error.bind(this);
         this.stop = this.stop.bind(this);
-        this.download = this.download.bind(this);
     }
 
     preview(stream) {
@@ -154,51 +156,12 @@ export default class WebcamController {
             preview.className = "gifster-webcam-preview preview-fade-out";
         }
 
-        this.download(url);
+        this.download(url, "webcam");
 
         setTimeout(() => {
             this.activeStream.getVideoTracks().forEach(track => track.stop());
             this.activeStream = null;
             preview.remove();
         }, 1500);
-    }
-
-    download(url) {
-        const filename = `webcam-${Date.now()}`;
-        const a = document.createElement("a");
-
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    }
-
-    createRenderingProgressNotification(progress) {
-        const notificationId = "render";
-
-        if(progress === 100) {
-            chrome.notifications.clear(notificationId);
-
-            return;
-        }
-
-        if (progress === 0) {
-            chrome.notifications.create(
-                notificationId,
-                {
-                    type: "progress",
-                    iconUrl: "icon128.png",
-                    title: "Rendering... ",
-                    message: "Gifster creates your gif :)",
-                    progress: 0
-                }
-            )
-        }
-        else {
-            chrome.notifications.update(
-                notificationId,
-                {progress}
-            );
-        }
     }
 }

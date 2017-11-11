@@ -14,7 +14,7 @@ const optionsHtmlWebpackPluginOptions = {
     chunks: ["options"]
 };
 const copyWebpackPluginOptions = [
-    {from: "scripts/app/gif.worker.js", to: "gif.worker.js"},
+    {from: "scripts/app/vendor/gif.worker.js", to: "gif.worker.js"},
     {from: "style/content.css", to: "content.css"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
@@ -23,10 +23,10 @@ const copyWebpackPluginOptions = [
 
 module.exports = {
     entry: {
-        popup: "./scripts/app/popup-controller.js",
-        content: "./scripts/app/content-controller.js",
-        background: "./scripts/app/background-controller.js",
-        options: "./scripts/app/options-controller.js"
+        popup: "./scripts/app/controllers/popup.js",
+        content: "./scripts/app/controllers/content.js",
+        background: "./scripts/app/controllers/background.js",
+        options: "./scripts/app/controllers/options.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),

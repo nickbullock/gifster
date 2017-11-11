@@ -1,11 +1,14 @@
 import GIF from "gif";
+import BaseController from "./base";
 
 /**
  * Can be called from background script only
  */
-export default class ScreenController {
+export default class ScreenController extends BaseController {
     constructor() {
         console.log("[ScreenController] constructor init");
+
+        super();
 
         this.activeStream = null;
         this.mediaOptions = {
@@ -28,7 +31,6 @@ export default class ScreenController {
         this.start = this.start.bind(this);
         this.process = this.process.bind(this);
         this.stop = this.stop.bind(this);
-        this.download = this.download.bind(this);
     }
 
     start() {
@@ -115,46 +117,6 @@ export default class ScreenController {
 
         this.activeStream.getVideoTracks().forEach(track => track.stop());
         this.activeStream = null;
-        this.download(url);
-    }
-
-    download(url) {
-        const filename = `screen-${Date.now()}`;
-        const a = document.createElement("a");
-
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    }
-
-
-    createRenderingProgressNotification(progress) {
-        const notificationId = "render";
-
-        if(progress === 100) {
-            chrome.notifications.clear(notificationId);
-
-            return;
-        }
-
-        if (progress === 0) {
-            chrome.notifications.create(
-                notificationId,
-                {
-                    type: "progress",
-                    iconUrl: "icon128.png",
-                    title: "Rendering... ",
-                    message: "Gifster creates your gif :)",
-                    progress: 0
-                }
-            )
-        }
-        else {
-            chrome.notifications.update(
-                notificationId,
-                {progress}
-            );
-        }
+        this.download(url, "screen");
     }
 }
