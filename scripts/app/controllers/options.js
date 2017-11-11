@@ -5,6 +5,8 @@ class OptionsController {
     constructor () {
         this.options = {};
         this.defaultOptions = {
+            preview: true,
+            timer: true,
             duration: 5,
             fps: 10,
             resolution: 2,
@@ -13,11 +15,21 @@ class OptionsController {
             height: 480
         };
 
-        this.durationSelector = "input#duration";
-        this.fpsSelector = "input#fps";
-        this.resolutionSelector = "input#resolution";
-        this.qualitySelector = "input#quality";
-        this.saveSelector = "a.save-btn";
+        this.saveId = "save";
+        this.optionsValuesHash = {
+            duration: Array.apply(null, {length: 10}).map((item, index) => `${index+1}s`),
+            fps: Array.apply(null, {length: 10}).map((item, index) => `${index+1}fps`),
+            resolution: ["360p", "480p", "720p"],
+            quality: Array.apply(null, {length: 10}).map((item, index) => index)
+        };
+        this.optionsIdList = [
+            "duration",
+            "fps",
+            "resolution",
+            "quality",
+            "preview",
+            "delay"
+        ]
     }
 
     start () {
@@ -29,38 +41,57 @@ class OptionsController {
         this.initValues = this.initValues.bind(this);
         this.saveValues = this.saveValues.bind(this);
 
-
-        document.querySelector(this.durationSelector).addEventListener("change", this.getValue.bind(null, "duration"));
-        document.querySelector(this.fpsSelector).addEventListener("change", this.getValue.bind(null, "fps"));
-        document.querySelector(this.resolutionSelector).addEventListener("change", this.getValue.bind(null, "resolution"));
-        document.querySelector(this.qualitySelector).addEventListener("change", this.getValue.bind(null, "quality"));
-        document.querySelector(this.saveSelector).addEventListener("click", this.saveValues);
+        document.getElementById(this.saveId).addEventListener("click", this.saveValues);
+        this.optionsIdList.forEach(selector =>
+            document.getElementById(selector).addEventListener("change", this.getValue));
 
         chrome.storage.sync.get(
             "gifsterOptions",
             (options) => {
                 if(options && options.gifsterOptions && Object.keys(options.gifsterOptions).length > 0){
-                    this.initValues(options.gifsterOptions, false);
+                    return this.initValues(options.gifsterOptions, false);
                 }
-                else{
-                    this.initValues(this.defaultOptions, true)
-                }
+
+                return this.initValues(this.defaultOptions, true);
             }
         );
     }
 
-    getValue (key, event) {
-        this.options[event.target.id] = event.target.value;
-        this.renderValue(key, event.target.value)
+    getValue (event) {
+        if(event.target.type !== "checkbox"){
+            this.options[event.target.id] = event.target.value;
+
+            return this.renderValue(event.target.id, event.target.value);
+        }
+
+        this.options[event.target.id] = event.target.checked;
+
+        return null;
     }
 
     setValue(key, value) {
-        document.querySelector(`input#${key}`).value = value;
-        this.renderValue(key, value)
+        const element = document.getElementById(key);
+
+        if(element){
+            if(element.type === "checkbox"){
+                element.checked = value;
+            }
+            else{
+                element.value = value;
+
+                return this.renderValue(key, value)
+            }
+        }
+
+        return null;
     }
 
     renderValue(key, value) {
-        document.querySelector(`.settings__block_${key} > .block__title > .block__value`).innerHTML = value;
+        if(this.optionsValuesHash.hasOwnProperty(key)){
+            return document.querySelector(`.settings__block_${key} > .block__title > .block__value`).innerHTML = this.optionsValuesHash[key][value-1];
+        }
+
+        return document.querySelector(`.settings__block_${key} > .block__title > .block__value`).innerHTML = value;
     }
 
     initValues(optionsInit, isFirstInit) {
@@ -73,11 +104,7 @@ class OptionsController {
         console.log("[OptionsController.initValues] options", optionsInit, isFirstInit);
 
         Object.assign(this.options, optionsInit);
-
-        this.setValue("duration", this.options.duration);
-        this.setValue("resolution", this.options.resolution);
-        this.setValue("fps", this.options.fps);
-        this.setValue("quality", this.options.quality);
+        Object.keys(this.options).forEach(key => this.setValue(key, this.options[key]));
     }
 
     saveValues () {
@@ -103,7 +130,8 @@ class OptionsController {
                 break;
         }
 
-        Object.keys(optionsInit).forEach(key => optionsInit[key] = parseInt(optionsInit[key]));
+        Object.keys(optionsInit).forEach(key =>
+            optionsInit[key] = isNaN(parseInt(optionsInit[key])) ? optionsInit[key] : parseInt(optionsInit[key]));
 
         chrome.storage.sync.set(
             {gifsterOptions: optionsInit},

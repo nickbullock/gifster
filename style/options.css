@@ -477,3 +477,212 @@ ons-range[disabled] .range {
         background-size: 100% 2px, 100% 2px;
     }
 }
+
+.checkbox {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 24px;
+}
+.checkbox__checkmark {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 17px;
+    position: relative;
+    overflow: hidden;
+    height: 24px;
+    pointer-events: none;
+}
+.checkbox__input {
+    position: absolute;
+    overflow: hidden;
+    right: 0px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    padding: 0;
+    border: 0;
+    opacity: 0.001;
+    z-index: 1;
+    vertical-align: top;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.checkbox__input:checked {
+    background: rgba(24,103,194,0.81);
+}
+.checkbox__input:checked + .checkbox__checkmark:before {
+    background: rgba(24,103,194,0.81);
+    border: 1px solid rgba(24,103,194,0.81);
+}
+.checkbox__input:checked + .checkbox__checkmark:after {
+    opacity: 1;
+}
+.checkbox__checkmark:before {
+    content: '';
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: 1px solid rgba(24,103,194,0.81);
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    left: 0;
+}
+.checkbox__checkmark {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 17px;
+    position: relative;
+    overflow: hidden;
+    width: 24px;
+    height: 24px;
+}
+.checkbox__checkmark:after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 5px;
+    width: 12px;
+    height: 6px;
+    background: transparent;
+    border: 3px solid #fff;
+    border-width: 2px;
+    border-top: none;
+    border-right: none;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    opacity: 0;
+}
+.checkbox__input:focus + .checkbox__checkmark:before {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.checkbox__input:disabled + .checkbox__checkmark {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
+.checkbox__input:disabled:active + .checkbox__checkmark:before {
+    background: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.checkbox--material {
+    line-height: 18px;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+.checkbox--material__checkmark {
+    width: 18px;
+    height: 18px;
+}
+.checkbox--material__checkmark:before {
+    border: 2px solid #717171;
+}
+.checkbox--material__input:checked + .checkbox--material__checkmark:before {
+    background-color: #850f5a;
+    border: none;
+}
+.checkbox--material__input + .checkbox--material__checkmark:after {
+    border-color: #ffffff;
+    -webkit-transition: -webkit-transform 0.3s ease;
+    -moz-transition: -moz-transform 0.3s ease;
+    -o-transition: -o-transform 0.3s ease;
+    transition: transform 0.3s ease;
+    width: 10px;
+    height: 5px;
+    top: 4px;
+    left: 3px;
+    -webkit-transform: scale(0) rotate(-45deg);
+    -moz-transform: scale(0) rotate(-45deg);
+    -ms-transform: scale(0) rotate(-45deg);
+    -o-transform: scale(0) rotate(-45deg);
+    transform: scale(0) rotate(-45deg);
+}
+.checkbox--material__input:checked + .checkbox--material__checkmark:after {
+    top: 4px;
+    left: 3px;
+    -webkit-transform: scale(1) rotate(-45deg);
+    -moz-transform: scale(1) rotate(-45deg);
+    -ms-transform: scale(1) rotate(-45deg);
+    -o-transform: scale(1) rotate(-45deg);
+    transform: scale(1) rotate(-45deg);
+}
+.checkbox--material__input:disabled + .checkbox--material__checkmark {
+    opacity: 1;
+}
+.checkbox--material__input:disabled + .checkbox--material__checkmark:before {
+    border-color: #afafaf;
+}
+.checkbox--material__input:disabled:checked + .checkbox--material__checkmark:before {
+    background-color: #afafaf;
+}
+.checkbox--material__input:disabled:checked + .checkbox--material__checkmark:after {
+    border-color: #fff;
+}
+.checkbox--material__input:disabled:checked:active + .checkbox--material__checkmark:before {
+    background-color: #afafaf;
+}
+.checkbox--material__checkmark:before {
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    width: 18px;
+    height: 18px;
+}
