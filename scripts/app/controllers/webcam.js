@@ -6,16 +6,17 @@ import BaseController from "./base";
  */
 export default class WebcamController extends BaseController {
 
-    constructor(fromContent) {
+    constructor(options, fromContent) {
         console.log("[WebcamController] constructor init", fromContent);
 
         super();
 
         this.activeStream = null;
+        this.options = options;
         this.mediaOptions = {
             video: true
         };
-        this.previewSelector = "#gifster-webcam-preview";
+        this.previewSelector = "gifster-webcam-preview";
         this.fromContent = fromContent;
 
         this.preview = this.preview.bind(this);
@@ -26,7 +27,7 @@ export default class WebcamController extends BaseController {
     }
 
     preview(stream) {
-        const previewExists = document.querySelector(this.previewSelector);
+        const previewExists = document.getElementById(this.previewSelector);
 
         if (!previewExists) {
             const preview = document.createElement("video");
@@ -37,7 +38,7 @@ export default class WebcamController extends BaseController {
             preview.id = this.previewSelector;
             preview.className = "gifster-webcam-preview preview-fade-in";
 
-            document.querySelector("body").appendChild(preview);
+            document.body.appendChild(preview);
         }
     }
 
@@ -49,98 +50,95 @@ export default class WebcamController extends BaseController {
         const self = this;
 
         this.activeStream = stream;
-        this.preview(stream);
+        if(this.options.preview){
+            this.preview(stream);
+        }
 
-        chrome.storage.sync.get(
-            "gifsterOptions",
-            (opts) => {
-                console.log("[WebcamController.process] start capturing", opts.gifsterOptions);
+        console.log("[WebcamController.process] start capturing", this.options);
 
-                function render(code){
-                    const gifsterOptions = opts.gifsterOptions;
-                    const canvas = document.createElement("canvas");
-                    const context = canvas.getContext("2d");
-                    const video = document.createElement("video");
+        function render(code) {
+            const gifsterOptions = self.options;
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            const video = document.createElement("video");
 
-                    const gif = new GIF({
-                        workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("gif.worker.js")),
-                        workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3*(gifsterOptions.duration * gifsterOptions.fps)),
-                        quality: 21 - gifsterOptions.quality,
-                        width: gifsterOptions.width,
-                        height: gifsterOptions.height
-                    });
+            const gif = new GIF({
+                workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("gif.worker.js")),
+                workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3 * (gifsterOptions.duration * gifsterOptions.fps)),
+                quality: 21 - gifsterOptions.quality,
+                width: gifsterOptions.width,
+                height: gifsterOptions.height
+            });
 
-                    video.muted = true;
-                    video.autoplay = true;
-                    video.width = gifsterOptions.width;
-                    video.height = gifsterOptions.height;
-                    video.srcObject = stream;
-                    video.onloadedmetadata = () => {
-                        setTimeout(() => {
-                            self.isLoadedMetaData = true;
-                        }, 1000);
-                    };
+            video.muted = true;
+            video.autoplay = true;
+            video.width = gifsterOptions.width;
+            video.height = gifsterOptions.height;
+            video.srcObject = stream;
+            video.onloadedmetadata = () => {
+                setTimeout(() => {
+                    self.isLoadedMetaData = true;
+                }, 1000);
+            };
 
-                    canvas.width = gifsterOptions.width;
-                    canvas.height = gifsterOptions.height;
+            canvas.width = gifsterOptions.width;
+            canvas.height = gifsterOptions.height;
 
-                    gif.on("start", () => {
-                        console.time("render");
-                    });
+            gif.on("start", () => {
+                console.time("render");
+            });
 
-                    gif.on("progress", (p) => {
-                        console.log(`[WebcamController.process] progress ${Math.round(p * 100)}%`);
-                        if(!chrome.notifications){
-                            chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p*100)});
-                        }
-                        else{
-                            self.createRenderingProgressNotification(Math.round(p*100));
-                        }
-
-                    });
-
-                    gif.on("finished", (blob) => {
-                        console.timeEnd("render");
-                        self.stop(blob);
-                    });
-
-                    video.addEventListener("play", function() {
-                        const interval = setInterval(() => {
-                            if(!self.isLoadedMetaData){
-                                return;
-                            }
-                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                            gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
-                        }, (1000 / gifsterOptions.fps) - 5);
-
-                        setTimeout(() => {
-                            clearInterval(interval);
-                            gif.render();
-                        }, (gifsterOptions.duration * 1000) + 1000)
-                    });
-
-                    video.play();
+            gif.on("progress", (p) => {
+                console.log(`[WebcamController.process] progress ${Math.round(p * 100)}%`);
+                if (!chrome.notifications) {
+                    chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p * 100)});
+                }
+                else {
+                    self.createRenderingProgressNotification(Math.round(p * 100));
                 }
 
-                if(self.fromContent){
-                    const xhr = new XMLHttpRequest();
+            });
 
-                    xhr.open("GET", chrome.extension.getURL("gif.worker.js"), true);
-                    xhr.send();
+            gif.on("finished", (blob) => {
+                console.timeEnd("render");
+                self.stop(blob);
+            });
 
-                    xhr.onreadystatechange = (data) => {
-                        if (xhr.readyState !== 4){
-                            return;
-                        }
+            video.addEventListener("play", () => {
+                const interval = setInterval(() => {
+                    if (!self.isLoadedMetaData) {
+                        return;
+                    }
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
+                }, (1000 / gifsterOptions.fps) - 5);
 
-                        render(data.target.response);
-                    };
+                setTimeout(() => {
+                    clearInterval(interval);
+                    gif.render();
+                }, (gifsterOptions.duration * 1000) + 1000)
+            });
+
+            video.play();
+        }
+
+        if (self.fromContent) {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open("GET", chrome.extension.getURL("gif.worker.js"), true);
+            xhr.send();
+
+            xhr.onreadystatechange = (data) => {
+                if (xhr.readyState !== 4) {
+                    return;
                 }
-                else{
-                    render();
-                }
-            }
-        );
+
+                render(data.target.response);
+            };
+        }
+        else {
+            render();
+        }
     }
 
     error(e) {
@@ -161,7 +159,10 @@ export default class WebcamController extends BaseController {
         setTimeout(() => {
             this.activeStream.getVideoTracks().forEach(track => track.stop());
             this.activeStream = null;
-            preview.remove();
+            if(preview){
+                preview.remove();
+            }
+
         }, 1500);
     }
 }

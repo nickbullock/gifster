@@ -7,8 +7,6 @@ class OptionsController {
         this.defaultOptions = {
             preview: true,
             timer: true,
-            cursor: false,
-            scrollbar: false,
             duration: 5,
             fps: 10,
             resolution: 2,
@@ -30,9 +28,7 @@ class OptionsController {
             "resolution",
             "quality",
             "preview",
-            "delay",
-            "cursor",
-            "scrollbar"
+            "delay"
         ];
         this.resolutionsList = [
             {width: 480, height: 360},
