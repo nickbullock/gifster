@@ -6,6 +6,14 @@
     font-family: choco;
     src: url(./../static/chocolate.otf);
 }
+
+.tooltip {
+    z-index: 10;
+    max-width: 400px;
+    background: rgba(60,179,113, .9);
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,.1);
+}
 .options {
     background: rgba(255, 246, 226, .4);
     width: 100%;
@@ -57,6 +65,7 @@
 
 /*SAVE BTN */
 .save-btn {
+    outline: none;
     cursor: pointer;
     background-color: rgba(133, 15, 90, .8);
     font-weight: bold;

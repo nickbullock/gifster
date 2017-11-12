@@ -39,6 +39,7 @@
   "dependencies": {
     "gif.js": "^0.2.0",
     "jquery": "^3.2.1",
-    "jquery-ui-dist": "^1.12.1"
+    "jquery-ui-dist": "^1.12.1",
+    "tooltip.js": "^1.1.7"
   }
 }

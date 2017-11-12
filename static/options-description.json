@@ -1,0 +1,8 @@
+{
+  "duration": "This parameter is the recording time. When increasing the value of this parameter, the recording time will increase.",
+  "fps": "This parameter is the number of shooting per-second. Gif image will looks more smoothly (like video). When increasing the value of this parameter, the number of shots per second will increase.",
+  "resolution": "This parameter is the size of image. It can be 480x360px, 858x480px or 720x1280px. Please note: area capture size will be not more than the selected value of this parameter.",
+  "quality": "This parameter is responsible for colors and image quality.",
+  "preview": "Do you want to see preview when you record pictures from the webcam? This parameter is responsible for this.",
+  "delay": "Do you need 3sec delay before the recording starts ? This parameter is responsible for this."
+}

@@ -1,6 +1,7 @@
 import "./../../../style/simple-grid.css";
 import "./../../../style/options.css";
-
+import optionsDescription from '../../../static/options-description.json';
+import Tooltip from 'tooltip.js/dist/tooltip';
 class OptionsController {
     constructor () {
         this.options = {};
@@ -35,6 +36,13 @@ class OptionsController {
             {width: 858, height: 480},
             {width: 1280, height: 720}
         ];
+
+        Object.keys(optionsDescription).forEach((option) => {
+            new Tooltip(document.getElementsByClassName(`settings__block_${option}`)[0], {
+                title: optionsDescription[option],
+                placement: "bottom"
+            })
+        });
     }
 
     start () {
@@ -49,6 +57,8 @@ class OptionsController {
         document.getElementById(this.saveId).addEventListener("click", this.saveValues);
         this.optionsIdList.forEach(selector =>
             document.getElementById(selector).addEventListener("change", this.getValue));
+
+
 
         chrome.storage.sync.get(
             "gifsterOptions",
