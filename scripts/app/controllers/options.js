@@ -7,6 +7,8 @@ class OptionsController {
         this.defaultOptions = {
             preview: true,
             timer: true,
+            cursor: false,
+            scrollbar: false,
             duration: 5,
             fps: 10,
             resolution: 2,
@@ -20,7 +22,7 @@ class OptionsController {
             duration: Array.apply(null, {length: 10}).map((item, index) => `${index+1}s`),
             fps: Array.apply(null, {length: 10}).map((item, index) => `${index+1}fps`),
             resolution: ["360p", "480p", "720p"],
-            quality: Array.apply(null, {length: 10}).map((item, index) => index)
+            quality: Array.apply(null, {length: 20}).map((item, index) => index+1)
         };
         this.optionsIdList = [
             "duration",
@@ -28,8 +30,15 @@ class OptionsController {
             "resolution",
             "quality",
             "preview",
-            "delay"
-        ]
+            "delay",
+            "cursor",
+            "scrollbar"
+        ];
+        this.resolutionsList = [
+            {width: 480, height: 360},
+            {width: 858, height: 480},
+            {width: 1280, height: 720}
+        ];
     }
 
     start () {
@@ -73,14 +82,15 @@ class OptionsController {
         const element = document.getElementById(key);
 
         if(element){
-            if(element.type === "checkbox"){
-                element.checked = value;
-            }
-            else{
+            if(element.type !== "checkbox"){
                 element.value = value;
 
                 return this.renderValue(key, value)
             }
+
+            element.checked = value;
+
+            return null;
         }
 
         return null;
@@ -109,26 +119,10 @@ class OptionsController {
 
     saveValues () {
         const optionsInit = {};
+        const resolution = this.resolutionsList[this.options.resolution-1];
 
         Object.assign(optionsInit, this.options);
-        switch(optionsInit.resolution.toString()) {
-            case "1":
-                optionsInit.width = 480;
-                optionsInit.height = 360;
-                break;
-            case "2":
-                optionsInit.width = 858;
-                optionsInit.height = 480;
-                break;
-            case "3":
-                optionsInit.width = 1280;
-                optionsInit.height = 720;
-                break;
-            case "4":
-                optionsInit.width = 1920;
-                optionsInit.height = 1080;
-                break;
-        }
+        Object.assign(optionsInit, resolution);
 
         Object.keys(optionsInit).forEach(key =>
             optionsInit[key] = isNaN(parseInt(optionsInit[key])) ? optionsInit[key] : parseInt(optionsInit[key]));

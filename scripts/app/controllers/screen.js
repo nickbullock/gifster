@@ -15,14 +15,7 @@ export default class ScreenController extends BaseController {
             video: true,
             videoConstraints: {
                 mandatory: {
-                    chromeMediaSource: "tab",
-                    maxWidth: 1920,
-                    maxHeight: 1080,
-                    maxFrameRate: 60,
-                    minFrameRate: 5,
-                    minWidth: 480,
-                    minHeight: 360,
-                    minAspectRatio: 1.77
+                    chromeMediaSource: "tab"
                 }
             }
         };
@@ -73,9 +66,7 @@ export default class ScreenController extends BaseController {
                 canvas.width = gifsterOptions.width;
                 canvas.height = gifsterOptions.height;
 
-                gif.on("start", () => {
-                    console.time("render");
-                });
+                gif.on("start", () => console.time("render"));
 
                 gif.on("progress", (p) => {
                     console.log(`[ScreenController.process] progress ${Math.round(p * 100)}%`);
