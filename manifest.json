@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "gifster",
-  "version": "1.0",
+  "version": "0.1",
   "description": "extension to make .gif animations",
   "icons": {
     "16": "icon16.png",
