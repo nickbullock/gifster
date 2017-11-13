@@ -1,8 +1,9 @@
 import ScreenController from "./screen";
 import WebcamController from "./webcam";
 import AreaController from "./area";
+import BaseController from "./base";
 
-class BackgroundController {
+class BackgroundController extends BaseController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
         chrome.commands.onCommand.addListener(this.commandListener.bind(this));
@@ -74,33 +75,7 @@ class BackgroundController {
                     }
                 }
                 if (request.renderingProgressNotification) {
-                    const notificationId = "render";
-                    const progress = request.progress;
-
-                    if (progress === 100) {
-                        chrome.notifications.clear(notificationId);
-
-                        return;
-                    }
-
-                    if (progress === 0 || !progress) {
-                        chrome.notifications.create(
-                            notificationId,
-                            {
-                                type: "progress",
-                                iconUrl: "icon128.png",
-                                title: "Rendering... ",
-                                message: "Gifster creates your gif :)",
-                                progress: 0
-                            }
-                        )
-                    }
-                    else {
-                        chrome.notifications.update(
-                            notificationId,
-                            {progress}
-                        );
-                    }
+                    this.createRenderingProgressNotification(request.progress);
                 }
 
                 if (request.error) {
@@ -117,7 +92,7 @@ class BackgroundController {
                             chrome.notifications.create({
                                 type: "basic",
                                 iconUrl: chrome.extension.getURL("icon128.png"),
-                                title: "Can't create preview",
+                                title: "Gif will be recorded",
                                 message: "Gifster can't create preview on this site - it's not secure enough (secure sites urls start with 'https'). But gif will be recorded :)"
                             });
 
@@ -141,20 +116,27 @@ class BackgroundController {
     commandListener(command) {
         console.log("[BackgroundController.commandListener]: incoming command ", command);
 
-        switch (command) {
-            case "webcam":
-                this.webcamHandler();
-                break;
-            case "screen":
-                this.screenHandlerBG();
-                break;
-            case "area":
-                this.renderAreaWindow();
-                break;
-            default:
-                break;
+        chrome.storage.sync.get(
+            "gifsterOptions",
+            (opts) => {
+                const options = opts.gifsterOptions;
 
-        }
+                switch (command) {
+                    case "webcam":
+                        this.webcamHandler(options);
+                        break;
+                    case "screen":
+                        this.screenHandlerBG(options);
+                        break;
+                    case "area":
+                        this.renderAreaWindow(options);
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        );
     }
 
     installListener(details) {

@@ -75,7 +75,11 @@ class ContentController {
         const sendStopMessage = () => chrome.runtime.sendMessage({areaStop: true});
 
         closeButton.onclick = () => area.remove();
-        startButton.onclick = () => sendAreaStartMessage();
+        startButton.onclick = () => {
+            jQuery(area).draggable("disable").resizable("disable");
+            sendAreaStartMessage();
+            setTimeout(() => jQuery(area).draggable("enable").resizable("enable"), options.duration * 1000);
+        };
         stopButton.onclick = () => sendStopMessage();
 
         document.body.appendChild(area);
@@ -99,10 +103,12 @@ class ContentController {
         document.addEventListener("mousemove", calculateBounds);
 
         jQuery(area)
-            .draggable()
+            .draggable({
+                containment: "window"
+            })
             .resizable({
                 minWidth: 250,
-                minHeight: 50
+                minHeight: 60
             });
 
         area.resize = () => {
@@ -132,9 +138,9 @@ class ContentController {
 
                 switch (counter) {
                     case 3:
-                        clearInterval(interval);
-                        this.timer.remove();
-                        this.timer = null;
+                        // clearInterval(interval);
+                        // this.timer.remove();
+                        // this.timer = null;
                         break;
                     default:
                         this.timer.innerHTML--;

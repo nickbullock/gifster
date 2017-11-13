@@ -132,11 +132,8 @@ export default class AreaController extends BaseController {
     stop(blob) {
         const url = window.URL.createObjectURL(blob);
 
+        this.activeStream.getVideoTracks().forEach(track => track.stop());
+        this.activeStream = null;
         this.download(url, "area");
-
-        setTimeout(() => {
-            this.activeStream.getVideoTracks().forEach(track => track.stop());
-            this.activeStream = null;
-        }, 1500);
     }
 }
