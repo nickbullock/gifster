@@ -138,9 +138,9 @@ class ContentController {
 
                 switch (counter) {
                     case 3:
-                        // clearInterval(interval);
-                        // this.timer.remove();
-                        // this.timer = null;
+                        clearInterval(interval);
+                        this.timer.remove();
+                        this.timer = null;
                         break;
                     default:
                         this.timer.innerHTML--;
