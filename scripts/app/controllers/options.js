@@ -19,7 +19,7 @@ class OptionsController {
         this.saveId = "save";
         this.optionsValuesHash = {
             duration: Array.apply(null, {length: 10}).map((item, index) => `${index+1}s`),
-            fps: Array.apply(null, {length: 10}).map((item, index) => `${index+1}fps`),
+            fps: Array.apply(null, {length: 15}).map((item, index) => `${index+1}fps`),
             resolution: ["360p", "480p", "720p"],
             quality: Array.apply(null, {length: 20}).map((item, index) => index+1)
         };
