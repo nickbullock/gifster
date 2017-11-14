@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "gifster",
   "version": "0.1",
-  "description": "extension to make .gif animations",
+  "description": "Record gif in browser",
   "icons": {
     "16": "icon16.png",
     "128": "icon128.png"
@@ -33,21 +33,21 @@
         "default": "Ctrl+Shift+1",
         "mac": "MacCtrl+Shift+1"
       },
-      "description": "record gif from webcam stream"
+      "description": "Record gif using webcam stream"
     },
     "screen": {
       "suggested_key": {
         "default": "Ctrl+Shift+2",
         "mac": "MacCtrl+Shift+2"
       },
-      "description": "record gif from screen stream"
+      "description": "Record gif using screen stream"
     },
     "area": {
       "suggested_key": {
         "default": "Ctrl+Shift+3",
         "mac": "MacCtrl+Shift+3"
       },
-      "description": "record gif from area stream"
+      "description": "Record gif using area stream"
     }
   },
   "permissions": [
