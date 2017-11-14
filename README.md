@@ -1,2 +1,64 @@
-# gifster
-Chrome extension to create .gif animations from your screen and webcam
+# Gifster
+Is a chrome extension to record gif images in browser.<br>
+Now is 0.1 beta version.
+
+Gifster supports 3 modes: webcam, screen and area.
+All 3 modes can be called from popup or by pressing hotkeys.
+Gifster works like this: <br>
+1)click 'webcam' or 'screen'<br>
+2)3 seconds timer (you can disable it in options)<br>
+3)capturing phase<br>
+4)rendering phase<br>
+
+Or click 'area'<br>
+1)create area popup<br>
+2)click start<br>
+3)3 seconds timer (you can disable it in options)<br>
+4)capturing phase<br>
+5)rendering phase<br>
+
+Please note: rendering phase requires a lot of resources, so  the browser can lag a bit.
+Gifster doesn't work on chrome:// pages.
+
+## Webcam
+Hotkey: CTRL+SHIFT+1
+
+In this mode you can record gif with yourself using your webcam.<br>
+
+Restrictions:
+- can't render preview on unsecure sites (secure sites url starts with https)
+
+![Alt Text](https://media.giphy.com/media/l2QE7UalvlPIEgJ2g/giphy.gif)
+
+## Screen
+Hotkey: CTRL+SHIFT+2
+
+In this mode you can record gif with your tab content.
+
+![Alt Text](https://media.giphy.com/media/26u4eKuNzD7jBFwaI/giphy.gif)
+
+## Area
+Hotkey: CTRL+SHIFT+3
+
+In this mode you can record gif with any part of your tab content.
+When you click 'area' in popup there is another popup. Feel free to drag and resize it, capture small and big parts of tab.
+You can stop recording at any moment by clicking 'stop'.When you finished with gif just click 'close' to close area popup.
+You can interact any content inside area popup in capturing phase.
+
+![Alt Text](https://media.giphy.com/media/3ohs7LUDBVEftShAXK/giphy.gif)
+
+## Options
+Options changes will affect all Gifster modes functionality.
+Duration, frame rate, resolution, quality, record delay changes functionality for all modes.
+Webcam preview affects only webcam mode.
+
+Please note: large values ​​of any options require a large amount of resources.
+
+
+
+
+
+
+
+
+
