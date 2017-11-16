@@ -1,10 +1,19 @@
 # Gifster
-Is a chrome extension to record gif images in browser.<br>
-Now is 0.1 beta version.
+Capture content of a tab, webcam or tab area as a animated gif image.
 
-Gifster supports 3 modes: webcam, screen and area.
+There is 3 modes supported: webcam, screen and area.
 All 3 modes can be called from popup or by pressing hotkeys.
-Gifster works like this: <br>
+
+Features
+
+- From 1 to 10 seconds capture duration
+- From 1 to 15 frames per second
+- High color quality of images
+- Three resolutions and custom aspect ratio(via area) supported
+- Recording delay
+- Webcam preview
+
+How it works<br>
 1)click 'webcam' or 'screen'<br>
 2)3 seconds timer (you can disable it in options)<br>
 3)capturing phase<br>
