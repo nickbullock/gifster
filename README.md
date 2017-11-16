@@ -1,6 +1,8 @@
 # Gifster
 Capture content of a tab, webcam or tab area as a animated gif image.
 
+<a href="https://chrome.google.com/webstore/detail/fafbmelagholigmfhdjpkfpgfmeijinn">Gifster chrome web store link</a>
+
 There is 3 modes supported: webcam, screen and area.
 All 3 modes can be called from popup or by pressing hotkeys.
 
