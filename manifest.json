@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "gifster",
   "author": "Nikita Balakirev",
-  "version": "0.1",
+  "version": "0.1.1",
   "description": "Record gif in browser",
   "icons": {
     "16": "icon16.png",
