@@ -144,16 +144,14 @@ class BackgroundController extends BaseController {
             console.log("[BackgroundController.installListener] first install");
 
             const defaultOptions = {
-                duration: 5,
-                fps: 10,
-                resolution: 2,
-                quality: 10,
-                width: 858,
-                height: 480,
                 preview: true,
-                delay: true,
-                cursor: false,
-                scrollbar: false
+                timer: true,
+                duration: 3,
+                fps: 8,
+                resolution: 1,
+                quality: 10,
+                width: 480,
+                height: 360
             };
 
             chrome.storage.sync.set({gifsterOptions: defaultOptions});

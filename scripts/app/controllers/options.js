@@ -7,13 +7,13 @@ class OptionsController {
         this.options = {};
         this.defaultOptions = {
             preview: true,
-            timer: true,
-            duration: 5,
-            fps: 10,
-            resolution: 2,
+            delay: true,
+            duration: 3,
+            fps: 8,
+            resolution: 1,
             quality: 10,
-            width: 858,
-            height: 480
+            width: 480,
+            height: 360
         };
 
         this.saveId = "save";
