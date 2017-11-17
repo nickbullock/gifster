@@ -46,7 +46,7 @@ html, body{
     width: 100%;
     font-size: 15px;
     text-align: center;
-    color: lightgray;
+    color: rgba(0,0,0,.4);
 }
 .title__content {
     margin-top: 10px;

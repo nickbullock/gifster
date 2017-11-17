@@ -11,7 +11,7 @@ class BackgroundController extends BaseController {
     }
 
     screenHandlerBG(options) {
-        chrome.tabs.query({active: true}, (tabs) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
             if(options.delay){
                 chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
             }
@@ -29,11 +29,11 @@ class BackgroundController extends BaseController {
     }
 
     webcamHandler(options) {
-        chrome.tabs.query({active: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {webcam: true, options}));
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {webcam: true, options}));
     }
 
     renderAreaWindow(options) {
-        chrome.tabs.query({active: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true, options}));
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true, options}));
     }
 
     areaHandlerBG(options, bounds, screenHeight, screenWidth) {
@@ -145,7 +145,7 @@ class BackgroundController extends BaseController {
 
             const defaultOptions = {
                 preview: true,
-                timer: true,
+                delay: true,
                 duration: 3,
                 fps: 8,
                 resolution: 1,
