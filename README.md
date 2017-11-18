@@ -6,7 +6,7 @@ Capture content of a tab, webcam or tab area as a animated gif image.
 There is 3 modes supported: webcam, screen and area.
 All 3 modes can be called from popup or by pressing hotkeys.
 
-Features
+## Features
 
 - From 1 to 10 seconds capture duration
 - From 1 to 15 frames per second
@@ -15,7 +15,7 @@ Features
 - Recording delay
 - Webcam preview
 
-How it works<br>
+## How it works
 1)click 'webcam' or 'screen'<br>
 2)3 seconds timer (you can disable it in options)<br>
 3)capturing phase<br>
