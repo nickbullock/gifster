@@ -18,7 +18,7 @@
     }
   ],
   "background": {
-    "scripts": ["controller.js", "background.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "options_page": "options.html",
