@@ -1,6 +1,12 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const bgHtmlWebpackPluginOptions = {
+    title: "gifster",
+    template: "background.html",
+    filename: "background.html",
+    chunks: ["background"]
+};
 const popupHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "popup.html",
@@ -77,6 +83,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(optionsHtmlWebpackPluginOptions),
+        new HtmlWebpackPlugin(bgHtmlWebpackPluginOptions),
         new CopyWebpackPlugin(copyWebpackPluginOptions)
     ]
 };

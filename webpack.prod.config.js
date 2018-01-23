@@ -3,6 +3,12 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const bgHtmlWebpackPluginOptions = {
+    title: "gifster",
+    template: "background.html",
+    filename: "background.html",
+    chunks: ["background"]
+};
 const popupHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "popup.html",
@@ -80,6 +86,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(optionsHtmlWebpackPluginOptions),
+        new HtmlWebpackPlugin(bgHtmlWebpackPluginOptions),
         new CopyWebpackPlugin(copyWebpackPluginOptions),
         new webpack.DefinePlugin({
             'process.env': {
