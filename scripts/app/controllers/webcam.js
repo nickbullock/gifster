@@ -63,7 +63,7 @@ export default class WebcamController extends BaseController {
             const video = document.createElement("video");
 
             const gif = new GIF({
-                workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("gif.worker.js")),
+                workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("scripts/gif.worker.js")),
                 workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3 * (gifsterOptions.duration * gifsterOptions.fps)),
                 quality: 21 - gifsterOptions.quality,
                 width: gifsterOptions.width,
@@ -125,7 +125,7 @@ export default class WebcamController extends BaseController {
         if (self.fromContent) {
             const xhr = new XMLHttpRequest();
 
-            xhr.open("GET", chrome.extension.getURL("gif.worker.js"), true);
+            xhr.open("GET", chrome.extension.getURL("scripts/gif.worker.js"), true);
             xhr.send();
 
             xhr.onreadystatechange = (data) => {

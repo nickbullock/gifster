@@ -49,7 +49,7 @@ export default class ScreenController extends BaseController {
         const context = canvas.getContext("2d");
         const video = document.createElement("video");
         const gif = new GIF({
-            workerScript: chrome.extension.getURL("gif.worker.js"),
+            workerScript: chrome.extension.getURL("scripts/gif.worker.js"),
             workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3 * (gifsterOptions.duration * gifsterOptions.fps)),
             quality: 21 - gifsterOptions.quality,
             width: gifsterOptions.width,

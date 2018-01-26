@@ -57,7 +57,7 @@ export default class AreaController extends BaseController {
         const LEFT_TOP_ACCURACY_ERROR = 1;
         const WIDTH_HEIGHT_ACCURACY_ERROR = 2;
         this.gif = new GIF({
-            workerScript: chrome.extension.getURL("gif.worker.js"),
+            workerScript: chrome.extension.getURL("scripts/gif.worker.js"),
             workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3 * (gifsterOptions.duration * gifsterOptions.fps)),
             quality: 21 - gifsterOptions.quality,
             width: ratio < 1 ? this.bounds.width * ratio : this.bounds.width,
