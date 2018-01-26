@@ -60,8 +60,6 @@
     "notifications"
   ],
   "web_accessible_resources": [
-    "gif.worker.js",
-    "controller.js"
-  ],
-  "content_security_policy": "script-src 'unsafe-eval'; object-src 'self';"
+    "gif.worker.js"
+  ]
 }
