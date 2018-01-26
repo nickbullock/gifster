@@ -4,26 +4,26 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const bgHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "background.html",
-    filename: "background.html",
+    filename: "pages/background.html",
     chunks: ["background"]
 };
 const popupHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "popup.html",
-    filename: "popup.html",
+    filename: "pages/popup.html",
     chunks: ["popup"]
 };
 const optionsHtmlWebpackPluginOptions = {
     title: "gifster",
     template: "options.html",
-    filename: "options.html",
+    filename: "pages/options.html",
     chunks: ["options"]
 };
 const copyWebpackPluginOptions = [
-    {from: "scripts/app/vendor/gif.worker.js", to: "gif.worker.js"},
-    {from: "style/content.css", to: "content.css"},
-    {from: "static/icon16.png", to: "icon16.png"},
-    {from: "static/icon128.png", to: "icon128.png"},
+    {from: "scripts/app/vendor/gif.worker.js", to: "scripts/gif.worker.js"},
+    {from: "style/content.css", to: "styles/content.css"},
+    {from: "static/icon16.png", to: "static/icon16.png"},
+    {from: "static/icon128.png", to: "static/icon128.png"},
     {from: "manifest.json", to: "manifest.json"}
 ];
 
@@ -36,7 +36,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "[name].js"
+        filename: "scripts/[name].js"
     },
     module: {
         rules: [
@@ -57,7 +57,7 @@ module.exports = {
                 test: /\.(ttf|otf)$/,
                 loader: "file-loader",
                 options: {
-                    name: "[name].[ext]"
+                    name: "/static/[name].[ext]"
                 },
                 exclude: path.resolve(__dirname, "node_modules")
             },
@@ -65,7 +65,7 @@ module.exports = {
                 test: /\.(png)$/,
                 loader: "file-loader",
                 options: {
-                    name: "[name].[ext]"
+                    name: "static/[name].[ext]"
                 },
                 exclude: path.resolve(__dirname, "node_modules")
             }
