@@ -15,6 +15,10 @@ All 3 modes can be called from popup or by pressing hotkeys.
 - Recording delay
 - Webcam preview
 
+## Note
+
+Please use gifster in a NEW tab after installation
+
 ## How it works
 1)click 'webcam' or 'screen'<br>
 2)3 seconds timer (you can disable it in options)<br>
