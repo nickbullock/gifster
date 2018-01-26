@@ -23,7 +23,6 @@ const optionsHtmlWebpackPluginOptions = {
 };
 const copyWebpackPluginOptions = [
     {from: "scripts/app/vendor/gif.worker.js", to: "gif.worker.js"},
-    {from: "scripts/app/vendor/controller.js", to: "controller.js"},
     {from: "style/content.css", to: "content.css"},
     {from: "static/icon16.png", to: "icon16.png"},
     {from: "static/icon128.png", to: "icon128.png"},
