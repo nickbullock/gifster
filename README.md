@@ -39,9 +39,7 @@ Gifster doesn't work on chrome:// pages.
 Hotkey: CTRL+SHIFT+1
 
 In this mode you can record gif with yourself using your webcam.<br>
-
-Restrictions:
-- can't render preview on unsecure sites (secure sites url starts with https)
+When you see "rendering" notification, capturing phase is over
 
 ![Alt Text](https://media.giphy.com/media/l2QE7UalvlPIEgJ2g/giphy.gif)
 
@@ -65,7 +63,6 @@ You can interact any content inside area popup in capturing phase.
 ## Options
 Options changes will affect all Gifster modes functionality.
 Duration, frame rate, resolution, quality, record delay changes functionality for all modes.
-Webcam preview affects only webcam mode.
 
 Please note: large values ​​of any options require a large amount of resources.
 

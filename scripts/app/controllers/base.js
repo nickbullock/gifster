@@ -23,7 +23,7 @@ export default class BaseController {
                 notificationId,
                 {
                     type: "progress",
-                    iconUrl: "icon128.png",
+                    iconUrl: chrome.extension.getURL("static/icon128.png"),
                     title: "Rendering... ",
                     message: "Gifster creates your gif :)",
                     progress: 0

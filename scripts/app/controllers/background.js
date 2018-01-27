@@ -1,5 +1,4 @@
 import ScreenController from "./screen";
-import WebcamController from "./webcam";
 import AreaController from "./area";
 import BaseController from "./base";
 
@@ -12,7 +11,7 @@ class BackgroundController extends BaseController {
 
     screenHandlerBG(options) {
         chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            if(options.delay){
+            if (options.delay) {
                 chrome.tabs.sendMessage(tabs[0].id, {renderTimer: true});
             }
 
@@ -24,16 +23,22 @@ class BackgroundController extends BaseController {
     }
 
     webcamHandlerBG(options) {
-        this.webcamController = new WebcamController(options);
-        this.webcamController.start();
-    }
-
-    webcamHandler(options) {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {webcam: true, options}));
+        chrome.windows.create({
+            left: 0,
+            top: 0,
+            width: 480,
+            height: 360,
+            focused: true,
+            type: "popup",
+            url: chrome.extension.getURL("pages/webcam.html")
+        });
     }
 
     renderAreaWindow(options) {
-        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true, options}));
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, tabs => chrome.tabs.sendMessage(tabs[0].id, {renderAreaWindow: true, options}));
     }
 
     areaHandlerBG(options, bounds, screenHeight, screenWidth) {
@@ -56,7 +61,7 @@ class BackgroundController extends BaseController {
                     console.log("options controller initialized");
                 }
                 if (request.webcam) {
-                    this.webcamHandler(options);
+                    this.webcamHandlerBG(options);
                     sendResponse({data: "webcam from runtime message started"});
                 }
                 if (request.screen) {
@@ -66,11 +71,11 @@ class BackgroundController extends BaseController {
                 if (request.area) {
                     this.renderAreaWindow(options);
                 }
-                if(request.areaStart) {
+                if (request.areaStart) {
                     this.areaHandlerBG(options, request.bounds, request.screenHeight, request.screenWidth);
                 }
-                if(request.areaStop) {
-                    if(this.areaController){
+                if (request.areaStop) {
+                    if (this.areaController) {
                         this.areaController.abort();
                     }
                 }
@@ -83,26 +88,15 @@ class BackgroundController extends BaseController {
                         case "DevicesNotFoundError":
                             chrome.notifications.create({
                                 type: "basic",
-                                iconUrl: chrome.extension.getURL("icon128.png"),
+                                iconUrl: chrome.extension.getURL("static/icon128.png"),
                                 title: "Device not found",
                                 message: "Gifster didn't find requested device"
                             });
                             break;
-                        case "PermissionDeniedError":
-                            chrome.notifications.create({
-                                type: "basic",
-                                iconUrl: chrome.extension.getURL("icon128.png"),
-                                title: "Gif will be recorded",
-                                message: "Gifster can't create preview on this site - it's not secure enough (secure sites urls start with 'https'). But gif will be recorded :)"
-                            });
-
-                            this.webcamHandlerBG(options);
-
-                            break;
                         default:
                             chrome.notifications.create({
                                 type: "basic",
-                                iconUrl: chrome.extension.getURL("icon128.png"),
+                                iconUrl: chrome.extension.getURL("static/icon128.png"),
                                 title: "Gifster got an error :(",
                                 message: "Please contact developer"
                             });
@@ -140,7 +134,7 @@ class BackgroundController extends BaseController {
     }
 
     installListener(details) {
-        if(details.reason === "install"){
+        if (details.reason === "install") {
             console.log("[BackgroundController.installListener] first install");
 
             const defaultOptions = {

@@ -28,7 +28,7 @@ class OptionsController {
             "fps",
             "resolution",
             "quality",
-            "preview",
+            // "preview",
             "delay"
         ];
         this.resolutionsList = [
@@ -37,8 +37,11 @@ class OptionsController {
             {width: 1280, height: 720}
         ];
 
-        Object.keys(optionsDescription).forEach((option) => {
-            new Tooltip(document.getElementsByClassName(`settings__block_${option}`)[0], {
+        Object.keys(optionsDescription).forEach(option => {
+            const node = document.getElementsByClassName(`settings__block_${option}`)[0];
+            console.log(">>", node);
+
+            new Tooltip(node, {
                 title: optionsDescription[option],
                 placement: "bottom"
             })
@@ -140,7 +143,7 @@ class OptionsController {
 
                 chrome.notifications.create({
                     type: "basic",
-                    iconUrl: chrome.extension.getURL("icon128.png"),
+                    iconUrl: chrome.extension.getURL("static/icon128.png"),
                     title: "Options saved",
                     message: "Gifster saved your options succesfully :)"
                 });

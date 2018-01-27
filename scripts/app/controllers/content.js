@@ -1,8 +1,7 @@
-import WebcamController from "./webcam";
 import jQuery from "jquery";
 import "jquery-ui-dist/jquery-ui.js";
 
-class ContentController {
+export default class ContentController {
     constructor() {
         console.log("[ContentController] constructor init");
     }
@@ -21,18 +20,11 @@ class ContentController {
 
                 const options = opts.gifsterOptions;
 
-                if (request.webcam) {
-                    if(options.delay){
-                        this.renderTimer();
-                    }
-
-                    setTimeout(() => new WebcamController(options, true).start(), options.delay ? 3300 : 0);
-                }
                 if (request.renderAreaWindow) {
                     this.renderAreaWindow(options);
                 }
                 if (request.renderTimer) {
-                    this.renderTimer();
+                    ContentController.renderTimer.call(this);
                 }
             }
         );
@@ -59,7 +51,7 @@ class ContentController {
 
         const sendAreaStartMessage = () => {
             if(options.delay){
-                this.renderTimer(innerArea);
+                ContentController.renderTimer.call(this, innerArea);
             }
 
             setTimeout(() => {
@@ -117,7 +109,7 @@ class ContentController {
         }
     }
 
-    renderTimer(element) {
+    static renderTimer(element) {
         if (!this.timer) {
             this.timer = document.createElement("div");
 

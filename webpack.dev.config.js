@@ -14,10 +14,16 @@ const popupHtmlWebpackPluginOptions = {
     chunks: ["popup"]
 };
 const optionsHtmlWebpackPluginOptions = {
-    title: "gifster",
+    title: "Gifster options",
     template: "options.html",
     filename: "pages/options.html",
     chunks: ["options"]
+};
+const webcamHtmlWebpackPluginOptions = {
+    title: "Webcam recording",
+    template: "webcam.html",
+    filename: "pages/webcam.html",
+    chunks: ["webcam"]
 };
 const copyWebpackPluginOptions = [
     {from: "scripts/app/vendor/gif.worker.js", to: "scripts/gif.worker.js"},
@@ -32,7 +38,8 @@ module.exports = {
         popup: "./scripts/app/controllers/popup.js",
         content: "./scripts/app/controllers/content.js",
         background: "./scripts/app/controllers/background.js",
-        options: "./scripts/app/controllers/options.js"
+        options: "./scripts/app/controllers/options.js",
+        webcam: "./scripts/app/controllers/webcam.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -83,6 +90,7 @@ module.exports = {
         new HtmlWebpackPlugin(popupHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(optionsHtmlWebpackPluginOptions),
         new HtmlWebpackPlugin(bgHtmlWebpackPluginOptions),
+        new HtmlWebpackPlugin(webcamHtmlWebpackPluginOptions),
         new CopyWebpackPlugin(copyWebpackPluginOptions)
     ]
 };

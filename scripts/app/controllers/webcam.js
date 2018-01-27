@@ -1,13 +1,15 @@
 import GIF from "gif";
 import BaseController from "./base";
+import ContentController from "./content";
+import "./../../../style/content.css";
 
 /**
- * Can be called from background and content scripts
+ * Can be called from background script
  */
 export default class WebcamController extends BaseController {
 
-    constructor(options, fromContent) {
-        console.log("[WebcamController] constructor init", fromContent);
+    constructor(options) {
+        console.log("[WebcamController] constructor init");
 
         super();
 
@@ -17,7 +19,7 @@ export default class WebcamController extends BaseController {
             video: true
         };
         this.previewSelector = "gifster-webcam-preview";
-        this.fromContent = fromContent;
+        this.timer = null;
 
         this.preview = this.preview.bind(this);
         this.start = this.start.bind(this);
@@ -48,32 +50,30 @@ export default class WebcamController extends BaseController {
 
     process(stream) {
         const self = this;
+        let rendering;
 
         this.activeStream = stream;
-        if(this.options.preview){
-            this.preview(stream);
-        }
 
         console.log("[WebcamController.process] start capturing", this.options);
 
-        function render(code) {
-            const gifsterOptions = self.options;
+        const render = () => {
+            const options = self.options;
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
             const video = document.createElement("video");
 
             const gif = new GIF({
-                workerScript: (code ? URL.createObjectURL(new Blob([code], {type: "text/javascript"})) : chrome.extension.getURL("scripts/gif.worker.js")),
-                workers: Math.round((gifsterOptions.duration * gifsterOptions.fps) + 0.3 * (gifsterOptions.duration * gifsterOptions.fps)),
-                quality: 21 - gifsterOptions.quality,
-                width: gifsterOptions.width,
-                height: gifsterOptions.height
+                workerScript: chrome.extension.getURL("scripts/gif.worker.js"),
+                workers: Math.round((options.duration * options.fps) + 0.3 * (options.duration * options.fps)),
+                quality: 21 - options.quality,
+                width: options.width,
+                height: options.height
             });
 
             video.muted = true;
             video.autoplay = true;
-            video.width = gifsterOptions.width;
-            video.height = gifsterOptions.height;
+            video.width = options.width;
+            video.height = options.height;
             video.srcObject = stream;
             video.onloadedmetadata = () => {
                 setTimeout(() => {
@@ -81,14 +81,14 @@ export default class WebcamController extends BaseController {
                 }, 1000);
             };
 
-            canvas.width = gifsterOptions.width;
-            canvas.height = gifsterOptions.height;
+            canvas.width = options.width;
+            canvas.height = options.height;
 
             gif.on("start", () => {
                 console.time("render");
             });
 
-            gif.on("progress", (p) => {
+            gif.on("progress", p => {
                 console.log(`[WebcamController.process] progress ${Math.round(p * 100)}%`);
                 if (!chrome.notifications) {
                     chrome.runtime.sendMessage({renderingProgressNotification: true, progress: Math.round(p * 100)});
@@ -96,11 +96,13 @@ export default class WebcamController extends BaseController {
                 else {
                     self.createRenderingProgressNotification(Math.round(p * 100));
                 }
-
             });
 
-            gif.on("finished", (blob) => {
+            gif.on("finished", blob => {
                 console.timeEnd("render");
+                rendering.innerHTML = "[RENDERED]";
+                rendering.className = "gifster-rendering-success";
+
                 self.stop(blob);
             });
 
@@ -110,40 +112,43 @@ export default class WebcamController extends BaseController {
                         return;
                     }
                     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    gif.addFrame(canvas, {copy: true, delay: (1000 / gifsterOptions.fps)});
-                }, (1000 / gifsterOptions.fps) - 5);
+                    gif.addFrame(canvas, {copy: true, delay: (1000 / options.fps)});
+                }, (1000 / options.fps) - 5);
 
                 setTimeout(() => {
+                    rendering = document.createElement("div");
+
+                    rendering.className = "gifster-rendering";
+                    rendering.innerHTML = "[RENDERING]";
+
+                    document.body.appendChild(rendering);
+
                     clearInterval(interval);
                     gif.render();
-                }, (gifsterOptions.duration * 1000) + 1000)
+                }, (options.duration * 1000) + 1000)
             });
 
             video.play();
-        }
+        };
 
-        if (self.fromContent) {
-            const xhr = new XMLHttpRequest();
+        if(self.options.delay){
+            const renderTimer = ContentController.renderTimer.bind(this);
 
-            xhr.open("GET", chrome.extension.getURL("scripts/gif.worker.js"), true);
-            xhr.send();
+            renderTimer();
 
-            xhr.onreadystatechange = (data) => {
-                if (xhr.readyState !== 4) {
-                    return;
-                }
-
-                render(data.target.response);
-            };
+            setTimeout(() => {
+                this.preview(stream);
+                render();
+            }, 3300);
         }
         else {
+            this.preview(stream);
             render();
         }
     }
 
     error(e) {
         console.error("[WebcamController.error] ", e);
-        chrome.runtime.sendMessage({error: {name: e.name}});
     }
 
     stop(blob) {
@@ -166,3 +171,13 @@ export default class WebcamController extends BaseController {
         }, 1500);
     }
 }
+
+chrome.storage.sync.get(
+    "gifsterOptions",
+    (opts) => {
+        const options = opts.gifsterOptions;
+        const controller = new WebcamController(options);
+
+        controller.start();
+    }
+);
