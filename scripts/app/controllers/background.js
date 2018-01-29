@@ -117,7 +117,7 @@ class BackgroundController extends BaseController {
 
                 switch (command) {
                     case "webcam":
-                        this.webcamHandler(options);
+                        this.webcamHandlerBG(options);
                         break;
                     case "screen":
                         this.screenHandlerBG(options);
