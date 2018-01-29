@@ -116,6 +116,12 @@ export default class WebcamController extends BaseController {
                 }, (1000 / options.fps) - 5);
 
                 setTimeout(() => {
+                    const preview = document.getElementById(this.previewSelector);
+
+                    if (preview) {
+                        preview.className = "gifster-webcam-preview preview-fade-out";
+                    }
+
                     rendering = document.createElement("div");
 
                     rendering.className = "gifster-rendering";
@@ -154,10 +160,6 @@ export default class WebcamController extends BaseController {
     stop(blob) {
         const url = window.URL.createObjectURL(blob);
         const preview = document.getElementById(this.previewSelector);
-
-        if (preview) {
-            preview.className = "gifster-webcam-preview preview-fade-out";
-        }
 
         this.download(url, "webcam");
 
