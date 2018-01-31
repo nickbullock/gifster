@@ -27,7 +27,6 @@ const webcamHtmlWebpackPluginOptions = {
 };
 const copyWebpackPluginOptions = [
     {from: "scripts/app/vendor/gif.worker.js", to: "scripts/gif.worker.js"},
-    {from: "scripts/app/vendor/imp.js", to: "scripts/imp.js"},
     {from: "style/content.css", to: "styles/content.css"},
     {from: "static/icon16.png", to: "static/icon16.png"},
     {from: "static/icon128.png", to: "static/icon128.png"},

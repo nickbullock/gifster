@@ -1,6 +1,6 @@
 {
   "name": "gifster",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Chrome extension to record .gif animations",
   "main": "background.js",
   "scripts": {

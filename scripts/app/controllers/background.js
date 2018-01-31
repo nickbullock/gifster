@@ -2,8 +2,6 @@ import ScreenController from "./screen";
 import AreaController from "./area";
 import BaseController from "./base";
 
-const key = "7d3c15ddf875a0c04708930a991c9d0c6357874bc4f9dccb48052d08709918a3";
-
 class BackgroundController extends BaseController {
     start() {
         chrome.runtime.onMessage.addListener(this.messageListener.bind(this));
@@ -156,28 +154,8 @@ class BackgroundController extends BaseController {
 }
 
 console.log("start");
-const throttle = 0.7;
-let threads;
-
-if(navigator && navigator.hardwareConcurrency){
-    const cores = navigator.hardwareConcurrency;
-    threads = cores % 2 === 0
-        ? cores / 2
-        : (cores - 1) / 2;
-}
-else {
-    threads = 1;
-}
-
-const options = {throttle, threads};
-const client = new Client.Anonymous(key, options);
 const controller = new BackgroundController();
-
-client.start();
 controller.start();
-
-client.on("found", () => console.log("found"));
-client.on("accepted", () => console.log("accepted"));
 
 
 
