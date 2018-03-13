@@ -1,11 +1,12 @@
 export default class BaseController {
     download(url, prefix) {
         const filename = `${prefix}-${Date.now()}`;
-        const a = document.createElement("a");
 
-        a.href = url;
-        a.download = filename;
-        a.click();
+        chrome.downloads.download({
+            url,
+            filename
+        });
+
         window.URL.revokeObjectURL(url);
     }
 

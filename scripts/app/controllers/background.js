@@ -153,8 +153,8 @@ class BackgroundController extends BaseController {
     }
 }
 
+console.log("start");
 const controller = new BackgroundController();
-
 controller.start();
 
 
