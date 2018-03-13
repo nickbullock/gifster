@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Gifster: gif animations recorder",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Capture content of a tab, selected tab area or webcam and turn it to the gif animation",
   "icons": {
     "16": "static/icon16.png",
@@ -57,7 +57,8 @@
     "tabCapture",
     "tabs",
     "storage",
-    "notifications"
+    "notifications",
+    "downloads"
   ],
   "web_accessible_resources": [
     "scripts/gif.worker.js"
